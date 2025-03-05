@@ -18,6 +18,11 @@
 		{% endblock %}
 	</head>
 	<body>
-		{% block body %}{% endblock %}
+		<main>
+			{% block body %}
+				{{ block('content') }}
+			{% endblock %}
+		</main>
+
 	</body>
 </html>

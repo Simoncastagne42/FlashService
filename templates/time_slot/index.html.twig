@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TimeSlot index{% endblock %}
+
+{% block body %}
+    <h1>TimeSlot index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>HeureDebut</th>
+                <th>HeureFin</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for time_slot in time_slots %}
+            <tr>
+                <td>{{ time_slot.id }}</td>
+                <td>{{ time_slot.date ? time_slot.date|date('Y-m-d') : '' }}</td>
+                <td>{{ time_slot.heureDebut ? time_slot.heureDebut|date('H:i:s') : '' }}</td>
+                <td>{{ time_slot.heureFin ? time_slot.heureFin|date('H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('time_slot_show', {'id': time_slot.id}) }}">show</a>
+                    <a href="{{ path('time_slot_edit', {'id': time_slot.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('time_slot_new') }}">Create new</a>
+{% endblock %}

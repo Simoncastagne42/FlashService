@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un service
+{% endblock %}
+
+{% block body %}
+	<div class="container mx-auto p-4">
+		<div class="flex justify-between items-center mb-6">
+			<h1 class="text-2xl font-semibold text-gray-800">Gestion des Services</h1>
+			<a href="{{ path('service_new') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">Ajouter un service</a>
+		</div>
+
+		<table class="min-w-full table-auto">
+			<thead>
+				<tr class="bg-gray-100">
+					<th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Nom du service</th>
+					<th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Description</th>
+					<th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for service in services %}
+					<tr class="border-b hover:bg-gray-50">
+						<td class="px-6 py-4 text-sm text-gray-800">{{ service.name }}</td>
+						<td class="px-6 py-4 text-sm text-gray-600 max-w-md break-words">
+							{{ service.description }}
+						</td>
+						<td class="px-6 py-4 text-sm flex gap-5 w-32">
+							<a href="{{ path('service_edit', {'id': service.id}) }}" class="text-blue-500 hover:text-blue-700">Modifier</a>
+							{{ include('service/_delete_form.html.twig') }}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

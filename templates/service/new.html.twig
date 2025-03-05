@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Service{% endblock %}
+
+{% block body %}
+<div class="container mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6">Ajouter un nouveau service</h1>
+
+ 
+    <form method="POST" action="{{ path('service_new') }}">
+        {{ form_start(form, { 'attr': {'class': 'space-y-4'} }) }}
+
+        <div class="mb-4">
+            {{ form_row(form.name, {
+                'attr': {
+                    'class': 'mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md'
+                }
+            }) }}
+        </div>
+
+        <div class="mb-4">
+            {{ form_row(form.description, {
+                'attr': {
+                    'class': 'mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md'
+                }
+            }) }}
+        </div>
+
+        <div class="mb-4">
+            {{ form_row(form.price, {
+                'attr': {
+                    'class': 'mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md'
+                }
+            }) }}
+        </div>
+
+        <div class="mb-4">
+            {{ form_row(form.professional, {
+                'attr': {
+                    'class': 'mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md'
+                }
+            }) }}
+        </div>
+
+        <div class="mb-6">
+            {{ form_row(form.save, {
+                'attr': {
+                    'class': 'bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 focus:outline-none'
+                }
+            }) }}
+        </div>
+
+        {{ form_end(form) }}
+    </form>
+
+    <div class="mt-4">
+        <a href="{{ path('service_index') }}" class="text-gray-500 hover:text-gray-700">Retour à la liste</a>
+    </div>
+</div>
+{% endblock %}
