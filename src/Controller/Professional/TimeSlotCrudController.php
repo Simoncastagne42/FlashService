@@ -6,8 +6,7 @@ use App\Entity\TimeSlot;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
-
-
+use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
 
 class TimeSlotCrudController extends AbstractCrudController
 {

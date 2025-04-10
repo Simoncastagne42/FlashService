@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion
+{% endblock %}
+
+{% block body %}
+
+	<div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+		<div class="max-w-md w-full bg-white p-8 rounded shadow-md">
+			<form method="post" class="space-y-4">
+				{% if error %}
+					<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+				{% endif %}
+
+				{% if app.user %}
+					<div class="mb-3">
+						You are logged in as
+						{{ app.user.userIdentifier }},
+						<a href="{{ path('app_logout') }}">Logout</a>
+					</div>
+				{% endif %}
+
+				<h1 class="text-2xl font-bold mb-6 text-center">Veuillez vous identifier
+				</h1>
+				<div>
+					<label for="username" class="block text-sm font-medium">Email</label>
+					<input type="email" class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
+				</div>
+				<div>
+					<label for="password" class="block text-sm font-medium">Mot de passe</label>
+					<input type="password" name="_password" id="password" class="form-control mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" autocomplete="current-password" required>
+
+					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+				</div>
+
+
+				{#
+																																		            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+																																		            See https://symfony.com/doc/current/security/remember_me.html
+																																		
+																																		            <div class="checkbox mb-3">
+																																		                <input type="checkbox" name="_remember_me" id="_remember_me">
+																																		                <label for="_remember_me">Remember me</label>
+																																		            </div>
+																																		        #}
+
+				<button class="btn btn-lg btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded" type="submit">
+					Se connecter
+				</button>
+				<div class="mt-6">
+					<a href="{{ path('auth_oauth_connect',{'service': 'google'}) }}" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition">
+						<img src=" {{ asset('img/google.png') }}" alt="logo google" class="mr-4 w-6 h-6">
+						Se connecter avec Google
+					</a>
+				</div>
+			</form>
+			<div class="text-center mt-5">
+				<p class="text-sm text-gray-600 flex flex-col gap-1">
+					Pas encore de compte ?
+					<a href="{{ path('app_register') }}" class="font-bold text-blue-600  hover:text-blue-700">
+						Inscription
+					</a>
+				</p>
+			</div>
+		</div>
+	</div>
+{% endblock %}

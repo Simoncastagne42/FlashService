@@ -1,20 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+
+{% block title %}Welcome!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	<body class="bg-gray-100">
+		<div class="container mx-auto px-4 py-8">
+			<header class="text-center mb-8">
+				<h1 class="text-4xl font-bold text-blue-600">Bienvenue sur notre plateforme !</h1>
+				<p class="mt-2 text-lg">Réservez facilement vos créneaux pour un service de votre choix</p>
+			</header>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+            <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                <h2 class="text-3xl font-bold text-gray-800 col-span-full text-center mb-6">Services Populaires</h2>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h2 class="text-2xl font-semibold text-gray-800">Réservation Coiffeur</h2>
+                    <p class="mt-4 text-gray-600">Réservez un créneau pour une coupe de cheveux ou un soin capillaire.</p>
+                    <a href="#" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Réserver</a>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h2 class="text-2xl font-semibold text-gray-800">Salle de Sport</h2>
+                    <p class="mt-4 text-gray-600">Choisissez un créneau pour votre séance de sport et restez en forme !</p>
+                    <a href="#" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Réserver</a>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h2 class="text-2xl font-semibold text-gray-800">Consultation Médicale</h2>
+                    <p class="mt-4 text-gray-600">Prenez un rendez-vous avec votre médecin pour une consultation.</p>
+                    <a href="#" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Réserver</a>
+                </div>
+            </section>
+		</div>
+	</body>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/Dev404/Documents/Projet2/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>C:/Users/Dev404/Documents/Projet2/templates/home/index.html.twig</code></li>
-    </ul>
-</div>
-{% endblock %}
+</html>{% endblock %}
