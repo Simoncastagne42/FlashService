@@ -23,7 +23,7 @@ use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
-{   
+{
     use TargetPathTrait;
 
     protected string $serviceName = '';
@@ -41,8 +41,13 @@ abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
             $request->get(key: 'service') === $this->serviceName;
     }
 
-    public function onAuthenticationSuccess(Request $request,TokenInterface $token, string $firewallName): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        /** @var User $user */
+        $user = $token->getUser();
+        if (!in_array('ROLE_CLIENT', $user->getRoles()) && !in_array('ROLE_PROFESSIONNEL', $user->getRoles())) {
+            return new RedirectResponse($this->router->generate('app_choose_role'));
+        }
         $targetPath = $this->getTargetPath($request->getSession(), $firewallName);
         if ($targetPath) {
             return new RedirectResponse($targetPath);
@@ -56,12 +61,12 @@ abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
             $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
         }
 
-        return new RedirectResponse($this->router->generate( name: 'auth_oauth_login'));
+        return new RedirectResponse($this->router->generate(name: 'auth_oauth_login'));
     }
 
     public function authenticate(Request $request): Passport
     {
-        $credentials= $this->fetchAccessToken($this->getClient());
+        $credentials = $this->fetchAccessToken($this->getClient());
         $resourceOwner = $this->getResourceOwnerFromCredentials($credentials);
         $user = $this->getUserFromResourceOwner($resourceOwner, $this->repository);
 
@@ -69,25 +74,22 @@ abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
             $user = $this->RegistrationService->persist($resourceOwner);
         }
         return new SelfValidatingPassport(
-            new UserBadge($user->getUserIdentifier(), fn () =>$user),
+            new UserBadge($user->getUserIdentifier(), fn() => $user),
             badges: [
                 new RememberMeBadge()
             ]
-            );
+        );
     }
 
     protected function getResourceOwnerFromCredentials(AccessToken $credentials): ResourceOwnerInterface
     {
         return $this->getClient()->fetchUserFromToken($credentials);
-
     }
 
     private function getClient(): OAuth2ClientInterface
     {
         return $this->clientRegistry->getClient($this->serviceName);
     }
-    
-    abstract protected function getUserFromResourceOwner(ResourceOwnerInterface $resourceOwner, UserRepository $repository): ?User;
-        
-}
 
+    abstract protected function getUserFromResourceOwner(ResourceOwnerInterface $resourceOwner, UserRepository $repository): ?User;
+}
