@@ -1,1 +1,11 @@
 {% extends "@EasyAdmin/page/content.html.twig" %}
+
+{% block content %}
+    <div>
+        <h1 >Bienvenue dans votre espace professionnel</h1>
+
+           <a href="{{ path('app_my_account') }}" class="btn btn-secondary ml-3" title="Retour au site">
+        <i class="fas fa-arrow-left me-1"></i> Retour au site
+    </a>
+    </div>
+{% endblock %}

@@ -9,16 +9,12 @@
 		<div class="max-w-md w-full bg-white p-8 rounded shadow-md">
 			<form method="post" class="space-y-4">
 				{% if error %}
-					<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-				{% endif %}
-
-				{% if app.user %}
-					<div class="mb-3">
-						You are logged in as
-						{{ app.user.userIdentifier }},
-						<a href="{{ path('app_logout') }}">Logout</a>
+					<div class="mb-4 p-3 rounded bg-red-100 text-red-700 border border-red-400">
+						<strong>Erreur :</strong>
+						Identifiants incorrects. Veuillez réessayer.
 					</div>
 				{% endif %}
+
 
 				<h1 class="text-2xl font-bold mb-6 text-center">Veuillez vous identifier
 				</h1>
@@ -33,16 +29,11 @@
 					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 				</div>
 
+				<div class="flex items-center">
+					<input type="checkbox" name="_remember_me" id="_remember_me" class="mr-2 hover:cursor-pointer">
+					<label for="_remember_me" class="text-sm text-gray-700 hover:cursor-pointer">Se souvenir de moi</label>
+				</div>
 
-				{#
-																																		            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-																																		            See https://symfony.com/doc/current/security/remember_me.html
-																																		
-																																		            <div class="checkbox mb-3">
-																																		                <input type="checkbox" name="_remember_me" id="_remember_me">
-																																		                <label for="_remember_me">Remember me</label>
-																																		            </div>
-																																		        #}
 
 				<button class="btn btn-lg btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded" type="submit">
 					Se connecter

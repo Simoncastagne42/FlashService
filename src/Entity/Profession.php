@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProfessionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProfessionRepository::class)]
@@ -16,9 +18,16 @@ class Profession
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToOne(mappedBy: 'profession', cascade: ['persist', 'remove'])]
-    private ?Professional $professional = null;
+    /**
+     * @var Collection<int, Professional>
+     */
+    #[ORM\OneToMany(mappedBy: 'profession', targetEntity: Professional::class, cascade: ['persist', 'remove'])]
+    private Collection $professional;
 
+    public function __construct()
+    {
+        $this->professional = new ArrayCollection();
+    }
     public function getId(): ?int
     {
         return $this->id;

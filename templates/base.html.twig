@@ -5,6 +5,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 		<script defer src="https://unpkg.com/alpinejs"></script>
 	</head>
 
@@ -28,14 +29,16 @@
 			<div
 				class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
 				<!-- Logo -->
-				<div class="text-xl font-bold">ServiceConnect</div>
+				<div class="text-xl font-bold ">
+				<a href="{{ path('app_home') }}" class="hover:text-gray-200" >ServiceConnect</a>
+				</div>
 
 				<!-- Menu Desktop -->
 				<nav class="hidden md:flex space-x-6 items-center">
 					<a href="{{ path('app_home') }}" class="hover:text-gray-200">Accueil</a>
 					<a href="#" class="hover:text-gray-200">Services</a>
 					<input type="text" placeholder="Rechercher un service..." class="rounded-full px-4 py-1 text-black">
-					<a href="{{ path('app_login') }}" class="hover:text-gray-200 flex items-center space-x-1">
+					<a href="{{ path('app_my_account') }}" class="hover:text-gray-200 flex items-center space-x-1">
 						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.485 0 4.8.735 6.879 2.004M15 10a3 3 0 11-6 0 3 3 0 016 0z"/>
 						</svg>
@@ -64,7 +67,7 @@
 				<nav class="flex flex-col p-4 space-y-4">
 					<a href="{{path( 'app_home')}}" class="hover:text-gray-200">Accueil</a>
 					<a href="#" class="hover:text-gray-200">Services</a>
-					<a href="#" class="hover:text-gray-200">Mon Compte</a>
+					<a href="{{ path('app_my_account') }}" class="hover:text-gray-200">Mon Compte</a>
 				</nav>
 			</div>
 		</header>
@@ -88,9 +91,9 @@
 
 					<!-- Liens de navigation -->
 					<div class="space-y-2">
-						<a href="#" class="block hover:text-white transition">Accueil</a>
+						<a href="{{ path('app_home') }}" class="block hover:text-white transition">Accueil</a>
 						<a href="#" class="block hover:text-white transition">Services</a>
-						<a href="#" class="block hover:text-white transition">Mon Compte</a>
+						<a href="{{ path('app_my_account') }}" class="block hover:text-white transition">Mon Compte</a>
 					</div>
 
 					<!-- Réseaux sociaux -->

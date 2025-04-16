@@ -1,0 +1,150 @@
+{% extends 'account/base_my_account.html.twig' %}
+
+{% block content_account %}
+
+	<div class="min-h-screen bg-gray-100 flex justify-center">
+		<div class="max-w-5xl w-full bg-white p-8 rounded shadow-md">
+			<h1 class="text-2xl font-bold mb-1 text-center">
+				Mon Profil
+				<h2 class="text-2xl font-bold mb-6 text-center">	{% if isPro %}
+					<span class="text-m font-medium text-blue-600">Professionnel</span>
+				{% elseif isClient %}
+					<span class="text-m font-medium text-blue-600">Client</span>
+				{% endif %}</h2>
+			
+			</h1>
+
+			{% if isPro %}
+				{{ form_start(form) }}
+
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div>
+						{{ form_label(form.last_name, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.last_name, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.last_name) }}
+					</div>
+
+					<div>
+						{{ form_label(form.first_name, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.first_name, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.first_name) }}
+					</div>
+
+					<div class="md:col-span-2">
+						{{ form_label(form.compagny_name, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.compagny_name, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.compagny_name) }}
+					</div>
+
+					<div class="md:col-span-2">
+						{{ form_label(form.adress_compagny, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.adress_compagny, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.adress_compagny) }}
+					</div>
+
+					<div>
+						{{ form_label(form.city_compagny, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.city_compagny, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.city_compagny) }}
+					</div>
+
+					<div>
+						{{ form_label(form.zip_code_compagny, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.zip_code_compagny, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.zip_code_compagny) }}
+					</div>
+
+					<div class="md:col-span-2">
+						{{ form_label(form.phone_compagny, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.phone_compagny, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.phone_compagny) }}
+					</div>
+
+					<div class="md:col-span-2">
+						{{ form_label(form.siret, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.siret, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.siret) }}
+					</div>
+
+					<div class="md:col-span-2">
+						{{ form_label(form.profession, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.profession, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.profession) }}
+					</div>
+				</div>
+
+				<div class="mt-6 text-center">
+					<button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">Enregistrer</button>
+				</div>
+				{% for label, messages in app.flashes %}
+					{% for message in messages %}
+						<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endfor %}
+
+				{{ form_end(form) }}
+			{% elseif isClient %}
+				{{ form_start(form) }}
+
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div>
+						{{ form_label(form.last_name, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.last_name, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.last_name) }}
+					</div>
+
+					<div>
+						{{ form_label(form.first_name, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.first_name, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.first_name) }}
+					</div>
+
+					<div class="md:col-span-2">
+						{{ form_label(form.adress, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.adress, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.adress) }}
+					</div>
+
+					<div class="md:col-span-2">
+						{{ form_label(form.city, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.city, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.city) }}
+					</div>
+
+					<div>
+						{{ form_label(form.zip_code, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.zip_code, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.zip_code) }}
+					</div>
+
+					<div>
+						{{ form_label(form.phone, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.phone, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.phone) }}
+					</div>
+
+					<div class="md:col-span-2">
+						{{ form_label(form.birth_date, null, {'label_attr': {'class': 'block text-sm font-medium'}}) }}
+						{{ form_widget(form.birth_date, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2'}}) }}
+						{{ form_errors(form.birth_date) }}
+					</div>
+
+				</div>
+
+				<div class="mt-6 text-center">
+					<button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">Enregistrer</button>
+				</div>
+				{% for label, messages in app.flashes %}
+					{% for message in messages %}
+						<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endfor %}
+				{{ form_end(form) }}
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

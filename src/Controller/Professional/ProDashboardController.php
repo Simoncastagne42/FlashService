@@ -42,16 +42,17 @@ class ProDashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Dashboard Pro');
-            
+            ->setTitle('Dashboard Pro')
+            ->setTranslationDomain('messages');
     }
 
-    
+
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Accueil', 'fa fa-home');
         yield MenuItem::linkToCrud('Mes Services', 'fa fa-cogs', Service::class);
         yield MenuItem::linkToCrud('Mes Créneaux', 'fa fa-calendar-days', TimeSlot::class);
         yield MenuItem::linkToCrud('Mes Réservations', 'fa fa-handshake', Reservation::class);
+        yield MenuItem::linkToUrl('Retour au site', 'fas fa-arrow-left', $this->generateUrl('app_my_account'));
     }
 }

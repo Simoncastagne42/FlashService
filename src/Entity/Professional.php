@@ -39,10 +39,10 @@ class Professional
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $siret = null;
 
-    #[ORM\OneToOne(inversedBy: 'professional', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'professional', targetEntity: User::class, cascade: ['persist', 'remove'])]
     private ?User $user = null;
 
-    #[ORM\OneToOne(inversedBy: 'professional', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'professional', targetEntity: Profession::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Profession $profession = null;
 
