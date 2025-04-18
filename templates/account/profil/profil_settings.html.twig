@@ -1,0 +1,60 @@
+{% extends 'account/base_my_account.html.twig' %}
+
+{% block content_account %}
+	<div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
+		<h2 class="text-2xl font-semibold mb-6 text-center">Modifier le mot de passe</h2>
+
+		{% for label, messages in app.flashes %}
+			<div class="p-4 mb-4 text-sm rounded-md
+																														         {% if label == 'success' %}bg-green-100 text-green-800{% elseif label == 'error' %}bg-red-100 text-red-800{% endif %}">
+				{% for message in messages %}
+					<p>{{ message }}</p>
+				{% endfor %}
+			</div>
+		{% endfor %}
+
+
+		{{ form_start(form) }}
+
+
+		<div class="mb-4">
+			{{ form_label(form.currentPassword, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+			{{ form_widget(form.currentPassword, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-400'}}) }}
+			{{ form_errors(form.currentPassword) }}
+		</div>
+
+		<div class="mb-4">
+			{{ form_label(form.newPassword.first, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+			{{ form_widget(form.newPassword.first, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-400'}}) }}
+			{% for error in form.newPassword.first.vars.errors %}
+				<p class="text-sm text-red-600 mt-1">{{ error.message }}</p>
+			{% endfor %}
+		</div>
+
+		<div class="mb-4">
+			{{ form_label(form.newPassword.second, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+			{{ form_widget(form.newPassword.second, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-400'}}) }}
+			{{ form_errors(form.newPassword.second) }}
+		</div>
+
+		<div class="text-center">
+			<button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200">
+				Modifier le mot de passe
+			</button>
+		</div>
+
+		{{ form_end(form) }}
+	</div>
+
+	<div class="max-w-5xl mx-auto bg-white p-6 rounded shadow mt-20 text-center">
+    		<h2 class="text-xl font-semibold mb-6 text-center">Supprimer le compte</h2>
+
+			<form method="post" action="{{ path('app_delete_account') }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer ton compte ? Cette action est irréversible.');">
+				<input type="hidden" name="_token" value="{{ csrf_token('delete-account') }}">
+				<button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-200">
+					Supprimer mon compte
+				</button>
+			</form>
+		</div>
+
+{% endblock %}

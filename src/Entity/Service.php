@@ -25,7 +25,8 @@ class Service
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0)]
     private ?string $price = null;
 
-    #[ORM\ManyToOne(inversedBy: 'services')]
+    #[ORM\ManyToOne(targetEntity: Professional::class, inversedBy: 'services')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Professional $professional = null;
 
     /**

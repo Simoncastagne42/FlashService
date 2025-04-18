@@ -4,14 +4,23 @@
 
 	<div class="min-h-screen bg-gray-100 flex justify-center">
 		<div class="max-w-5xl w-full bg-white p-8 rounded shadow-md">
+			{% for label, messages in app.flashes %}
+				{% for message in messages %}
+					<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+						{{ message }}
+					</div>
+				{% endfor %}
+			{% endfor %}
 			<h1 class="text-2xl font-bold mb-1 text-center">
 				Mon Profil
-				<h2 class="text-2xl font-bold mb-6 text-center">	{% if isPro %}
-					<span class="text-m font-medium text-blue-600">Professionnel</span>
-				{% elseif isClient %}
-					<span class="text-m font-medium text-blue-600">Client</span>
-				{% endif %}</h2>
-			
+				<h2 class="text-2xl font-bold mb-6 text-center">
+					{% if isPro %}
+						<span class="text-m font-medium text-blue-600">Professionnel</span>
+					{% elseif isClient %}
+						<span class="text-m font-medium text-blue-600">Client</span>
+					{% endif %}
+				</h2>
+
 			</h1>
 
 			{% if isPro %}
@@ -76,13 +85,7 @@
 				<div class="mt-6 text-center">
 					<button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">Enregistrer</button>
 				</div>
-				{% for label, messages in app.flashes %}
-					{% for message in messages %}
-						<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-							{{ message }}
-						</div>
-					{% endfor %}
-				{% endfor %}
+
 
 				{{ form_end(form) }}
 			{% elseif isClient %}

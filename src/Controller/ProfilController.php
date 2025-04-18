@@ -13,6 +13,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Professional;
 use App\Entity\User;
+use App\Form\ChangePasswordType;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 
@@ -85,6 +90,71 @@ final class ProfilController extends AbstractController
     public function reservations(): Response
     {
         return $this->render('account/profil/reservations.html.twig');
-        
+    }
+
+    #[Route('/my-account/settings', name: 'app_profil_settings')]
+    public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    {
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+        $form = $this->createForm(ChangePasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $currentPassword = $form->get('currentPassword')->getData();
+            $newPassword = $form->get('newPassword')->getData();
+
+            // Vérifie que l'ancien mot de passe est correct
+            if (!$passwordHasher->isPasswordValid($user, $currentPassword)) {
+                $form->get('currentPassword')->addError(new \Symfony\Component\Form\FormError('Mot de passe actuel incorrect.'));
+            } else {
+                // Encode et enregistre le nouveau mot de passe
+                $user->setPassword($passwordHasher->hashPassword($user, $newPassword));
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Votre mot de passe a été changé avec succès.');
+                return $this->redirectToRoute('app_profil_settings');
+            }
+        }
+
+        return $this->render('account/profil/profil_settings.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+    #[Route('/my-account/delete', name: 'app_delete_account', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function deleteAccount(Request $request, EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, Security $security): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($this->isCsrfTokenValid('delete-account', $request->request->get('_token'))) {
+
+            $username = $user->getEmail();
+
+            // Supprime les entités liées si besoin
+            if ($user->getClient()) {
+                $entityManager->remove($user->getClient());
+            }
+            if ($user->getProfessional()) {
+                $entityManager->remove($user->getProfessional());
+            }
+
+            $entityManager->remove($user);
+            $entityManager->flush();
+
+            // Déconnexion propre : on vide le token
+            $tokenStorage->setToken(null);
+            $request->getSession()->invalidate();
+
+            $this->addFlash('success', "Le compte {$username} a été supprimé.");
+        }
+
+        // Déconnexion manuelle
+        return $this->redirectToRoute('app_home');
     }
 }

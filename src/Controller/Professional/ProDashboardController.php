@@ -39,6 +39,7 @@ class ProDashboardController extends AbstractDashboardController
         return $this->render('professional/dashboard.html.twig');
     }
 
+
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
