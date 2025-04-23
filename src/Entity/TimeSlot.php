@@ -29,6 +29,10 @@ class TimeSlot
     #[ORM\OneToOne(mappedBy: 'timeSlot', cascade: ['persist', 'remove'])]
     private ?Reservation $reservation = null;
 
+    #[ORM\ManyToOne(inversedBy: 'timeSlots')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Service $service = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -100,6 +104,23 @@ class TimeSlot
         }
 
         $this->reservation = $reservation;
+
+        return $this;
+    }
+
+    public function __toString(): string
+{
+    return $this->heureDebut->format('Y-m-d H:i') . ' - ' . $this->heureFin->format('H:i');
+}
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(?Service $service): static
+    {
+        $this->service = $service;
 
         return $this;
     }

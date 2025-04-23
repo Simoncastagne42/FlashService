@@ -16,6 +16,19 @@ class TimeSlotRepository extends ServiceEntityRepository
         parent::__construct($registry, TimeSlot::class);
     }
 
+    public function findAvailableSlotsForService(int $serviceId, array $reservedSlotIds): array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->andWhere('t.service = :serviceId')
+            ->setParameter('serviceId', $serviceId);
+    
+        if (!empty($reservedSlotIds)) {
+            $qb->andWhere('t.id NOT IN (:reservedIds)')
+               ->setParameter('reservedIds', $reservedSlotIds);
+        }
+    
+        return $qb->getQuery()->getResult();
+    }
     //    /**
     //     * @return TimeSlot[] Returns an array of TimeSlot objects
     //     */

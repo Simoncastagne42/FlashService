@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Professional;
 use App\Entity\User;
 use App\Form\ChangePasswordType;
+use App\Repository\ReservationRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -87,9 +88,22 @@ final class ProfilController extends AbstractController
 
     #[Route('/my-account/reservations', name: 'app_profil_reservations')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function reservations(): Response
+    public function mesReservations(Security $security, ReservationRepository $reservationRepo): Response
     {
-        return $this->render('account/profil/reservations.html.twig');
+        /** @var \App\Entity\User $user */
+        $user = $security->getUser();
+    
+        if (!$user || !$user->getClient()) {
+            $this->addFlash('error', 'Vous devez être connecté en tant que client pour voir vos réservations.');
+            return $this->redirectToRoute('app_login');
+        }
+    
+        $client = $user->getClient();
+        $reservations = $reservationRepo->findBy(['client' => $client]);
+    
+        return $this->render('account/profil/profil_reservations.html.twig', [
+            'reservations' => $reservations,
+        ]);
     }
 
     #[Route('/my-account/settings', name: 'app_profil_settings')]

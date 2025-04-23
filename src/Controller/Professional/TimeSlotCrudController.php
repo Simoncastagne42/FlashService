@@ -1,18 +1,17 @@
 <?php
-
 namespace App\Controller\Professional;
 
 use App\Entity\TimeSlot;
-use App\Entity\Professionnal;
+use App\Entity\User;
+use App\Repository\ServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection as CollectionFilterCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
@@ -20,66 +19,60 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class TimeSlotCrudController extends AbstractCrudController
 {
-   
-
-    public function __construct(private Security $security, private EntityRepository $entityRepository)
-    {
-        $this->security = $security;
-    }
+    public function __construct(
+        private Security $security,
+        private EntityRepository $entityRepository
+    ) {}
 
     public static function getEntityFqcn(): string
     {
         return TimeSlot::class;
     }
 
-     // Filtrer les services pour n'afficher que ceux du professionnel connecté
-     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, CollectionFilterCollection $filters): QueryBuilder
-     {
-         /** @var User */
-         $user = $this->security->getUser();
-         $professional = $user->getProfessional();
-     
-         $response = $this->entityRepository->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
-         $response->andWhere('entity.professional = :professional')->setParameter('professional', $professional);
-     
-         return $response;
-     }
+    public function createIndexQueryBuilder(
+        SearchDto $searchDto,
+        EntityDto $entityDto,
+        FieldCollection $fields,
+        CollectionFilterCollection $filters
+    ): QueryBuilder {
+        /** @var User $user */
+        $user = $this->security->getUser();
+        $professional = $user?->getProfessional();
 
+        $response = $this->entityRepository->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        $response->andWhere('entity.professional = :professional')
+                 ->setParameter('professional', $professional);
+
+        return $response;
+    }
 
     public function configureFields(string $pageName): iterable
     {
-        $fields = [
-            DateField::new('date')
-                ->setFormat('dd/MM/yyyy'),
+        /** @var User $user */
+        $user = $this->security->getUser();
+        $professional = $user?->getProfessional();
 
-            TimeField::new('heureDebut')
-                -> setLabel('Heure de début')
-                -> setFormat('HH:mm'),
-
-            TimeField::new('heureFin')
-                -> setLabel('Heure de fin')
-                -> setFormat('HH:mm'),
-
+        return [
+            AssociationField::new('service', 'Service associé')
+                ->setFormTypeOption('choice_label', 'name')
+                ->setFormTypeOption('query_builder', function (ServiceRepository $repo) use ($professional) {
+                    return $repo->createQueryBuilder('s')
+                        ->where('s.professional = :pro')
+                        ->setParameter('pro', $professional);
+                }),
+            DateField::new('date', 'Date du créneau'),
+            TimeField::new('heureDebut', 'Heure de début')->setFormat('HH:mm'),
+            TimeField::new('heureFin', 'Heure de fin')->setFormat('HH:mm'),
         ];
-
-        return $fields;
-    }
-
-    public function configureActions(Actions $actions): Actions
-    {
-        return $actions
-            ->setPermission(Action::EDIT, 'TIMESLOT_EDIT')
-            ->setPermission(Action::DELETE, 'TIMESLOTDELETE')
-            ->setPermission(Action::DETAIL, 'TIMESLOT_VIEW');
     }
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         if (!$entityInstance instanceof TimeSlot) return;
 
-        /** @var Professionnal */
+        /** @var User $user */
         $user = $this->security->getUser();
-        $professional = $user->getProfessional();
+        $professional = $user?->getProfessional();
 
         if ($professional) {
             $entityInstance->setProfessional($professional);
@@ -88,5 +81,3 @@ class TimeSlotCrudController extends AbstractCrudController
         parent::persistEntity($entityManager, $entityInstance);
     }
 }
-
-

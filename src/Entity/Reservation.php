@@ -14,14 +14,14 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $statut = null;
+   
+    public const STATUS_PENDING = 'en_attente';
+    public const STATUS_CONFIRMED = 'confirmée';
+    public const STATUS_CANCELLED = 'annulée';
+    
+    #[ORM\Column(length: 255, type: 'string')]
+    private ?string $statut = self::STATUS_PENDING;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
-
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $heure = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     private ?Service $service = null;
@@ -49,29 +49,15 @@ class Reservation
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public static function getAllowedStatuses(): array
     {
-        return $this->date;
+        return [
+            self::STATUS_PENDING,
+            self::STATUS_CONFIRMED,
+            self::STATUS_CANCELLED,
+        ];
     }
 
-    public function setDate(\DateTimeInterface $date): static
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    public function getHeure(): ?\DateTimeInterface
-    {
-        return $this->heure;
-    }
-
-    public function setHeure(\DateTimeInterface $heure): static
-    {
-        $this->heure = $heure;
-
-        return $this;
-    }
 
     public function getService(): ?Service
     {
@@ -107,5 +93,25 @@ class Reservation
         $this->client = $client;
 
         return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->getTimeSlot()?->getDate();
+    }
+
+    public function getHeureDebut(): ?\DateTimeInterface
+    {
+        return $this->getTimeSlot()?->getHeureDebut();
+    }
+
+    public function getHeureFin(): ?\DateTimeInterface
+    {
+        return $this->getTimeSlot()?->getHeureFin();
+    }
+
+    public function __toString(): string
+    {
+        return 'Réservation #' . $this->id ?? 'Réservation';
     }
 }

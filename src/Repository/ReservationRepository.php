@@ -16,6 +16,21 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
+    public function findReservedSlotIdsForService(int $serviceId, ?int $exceptReservationId = null): array
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('IDENTITY(r.timeSlot)')
+            ->join('r.service', 's')
+            ->where('s.id = :serviceId')
+            ->setParameter('serviceId', $serviceId);
+    
+        if ($exceptReservationId) {
+            $qb->andWhere('r.id != :currentId')->setParameter('currentId', $exceptReservationId);
+        }
+    
+        return array_column($qb->getQuery()->getArrayResult(), 1);
+    }
+
     //    /**
     //     * @return Reservation[] Returns an array of Reservation objects
     //     */

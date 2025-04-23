@@ -22,7 +22,7 @@ class Service
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $price = null;
 
     #[ORM\ManyToOne(targetEntity: Professional::class, inversedBy: 'services')]
@@ -35,9 +35,16 @@ class Service
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'service')]
     private Collection $reservations;
 
+    /**
+     * @var Collection<int, TimeSlot>
+     */
+    #[ORM\OneToMany(targetEntity: TimeSlot::class, mappedBy: 'service', orphanRemoval: true)]
+    private Collection $timeSlots;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
+        $this->timeSlots = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -117,6 +124,41 @@ class Service
             // set the owning side to null (unless already changed)
             if ($reservation->getService() === $this) {
                 $reservation->setService(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name ?? 'Service';
+    }
+
+    /**
+     * @return Collection<int, TimeSlot>
+     */
+    public function getTimeSlots(): Collection
+    {
+        return $this->timeSlots;
+    }
+
+    public function addTimeSlot(TimeSlot $timeSlot): static
+    {
+        if (!$this->timeSlots->contains($timeSlot)) {
+            $this->timeSlots->add($timeSlot);
+            $timeSlot->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTimeSlot(TimeSlot $timeSlot): static
+    {
+        if ($this->timeSlots->removeElement($timeSlot)) {
+            // set the owning side to null (unless already changed)
+            if ($timeSlot->getService() === $this) {
+                $timeSlot->setService(null);
             }
         }
 
