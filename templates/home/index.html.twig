@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-	<body class="bg-gray-100">
+	<body>
 		<div class="container mx-auto px-4 py-8">
 			{% for label, messages in app.flashes %}
 				{% for message in messages %}
@@ -16,13 +16,13 @@
 			{% endfor %}
 			<header class="text-center mb-8">
 				<h1 class="text-4xl font-bold text-blue-600">Bienvenue sur notre plateforme !</h1>
-				<p class="mt-2 text-lg">Réservez facilement tous vos services du quotidien</p>
+				<p class="mt-2 text-lg font-semibold">Trouvez et réservez facilement tous vos services du quotidien</p>
 			</header>
 
 
-			<section class="py-12 bg-gray-100">
+			<section class="py-12">
 				<div class="container mx-auto px-4">
-					<h2 class="text-2xl font-bold text-center mb-8">Nos Services</h2>
+					<h2 class="text-2xl font-bold text-center mb-8">Les Services</h2>
 
 
 					{% if services is empty %}
@@ -32,13 +32,20 @@
 							{% for service in services %}
 								<div class="bg-white p-6 rounded-lg shadow-md">
 									<h3 class="text-lg font-semibold mb-2">{{ service.name }}</h3>
-									<p class="text-gray-600 text-sm">{{ service.description }}</p>
+									<p class="text-gray-600 text-sm break-words">{{ service.description }}</p>
 									<p class="text-blue-600 font-bold mt-2">{{ service.price / 100 }}
 										€</p>
-									<p class="text-xs text-gray-400 mt-1">
-										Proposé par :
-										{{ service.professional.compagnyName ?? 'Professionnel inconnu' }}
-									</p>
+									<div class="text-xs text-gray-400 mt-1 flex flex-col space-y-1">
+										<span>
+											<strong>Proposé par :</strong>
+											{{ service.professional.compagnyName ?? 'Professionnel inconnu' }}</span>
+										<span>
+											<strong>Ville :</strong>
+											{{ service.professional.cityCompagny ?? 'Ville inconnue' }}</span>
+										<span>
+											<strong>Code postal :</strong>
+											{{ service.professional.zipCodeCompagny ?? 'Code postal inconnu' }}</span>
+									</div>
 									<a href="{{ path('service_reserver', {id: service.id}) }}" class="inline-block mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
 										Réserver
 									</a>

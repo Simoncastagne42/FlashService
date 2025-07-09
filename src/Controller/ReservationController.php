@@ -34,6 +34,10 @@ final class ReservationController extends AbstractController
             $this->addFlash('error', 'Vous devez être connecté pour réserver.');
             return $this->redirectToRoute('app_login');
         }
+        if (!$user->getClient()) {
+            $this->addFlash('error', 'Vous devez compléter votre profil client avant de réserver.');
+            return $this->redirectToRoute('app_profil_infos'); 
+        }
 
         if (!in_array('ROLE_CLIENT', $user->getRoles())) {
             $this->addFlash('error', 'Vous devez avoir le rôle "client" pour effectuer une réservation.');

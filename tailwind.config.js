@@ -6,7 +6,12 @@ module.exports = {
     
   ],
   theme: {
-    extend: {},
+    extend: {
+       fontFamily: {
+     title: ['Raleway', 'sans-serif'],
+        sans: ['Poppins', 'sans-serif'],
+      },
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),

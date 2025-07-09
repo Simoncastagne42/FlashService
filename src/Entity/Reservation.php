@@ -14,11 +14,11 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
-   
+
     public const STATUS_PENDING = 'en_attente';
     public const STATUS_CONFIRMED = 'confirmée';
     public const STATUS_CANCELLED = 'annulée';
-    
+
     #[ORM\Column(length: 255, type: 'string')]
     private ?string $statut = self::STATUS_PENDING;
 
@@ -93,6 +93,33 @@ class Reservation
         $this->client = $client;
 
         return $this;
+    }
+
+    public function getClientEmail(): ?string
+    {
+        return $this->client?->getUser()?->getEmail() ?? 'Inconnu';
+    }
+
+    public function getClientPhone(): ?string
+    {
+        $phone = $this->client?->getPhone();
+
+        // Si pas de numéro → Inconnu, sinon on formatte
+        return empty($phone)
+            ? 'Inconnu'
+            : trim(chunk_split(substr(preg_replace('/\D/', '', $phone), 0, 10), 2, ' '));
+    }
+    public function getClientAdress(): ?string
+    {
+        return $this->client?->getAdress();
+    }
+    public function getClientCity(): ?string
+    {
+        return $this->client?->getCity();
+    }
+    public function getClientZipCode(): ?string
+    {
+        return $this->client?->getZipCode();
     }
 
     public function getDate(): ?\DateTimeInterface

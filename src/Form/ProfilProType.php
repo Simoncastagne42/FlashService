@@ -26,7 +26,7 @@ class ProfilProType extends AbstractType
                 'label' => 'Nom',
             ])
             ->add('adress_compagny', TextType::class, [
-                'label' => 'Adresse',
+                'label' => "Adresse de l'entreprise",
             ])
             ->add('city_compagny', TextType::class, [
                 'label' => 'Ville',

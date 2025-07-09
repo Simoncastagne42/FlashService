@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 		<script defer src="https://unpkg.com/alpinejs"></script>
 	</head>
 
@@ -24,20 +25,25 @@
 			{{ importmap('app') }}
 		{% endblock %}
 	{% endblock %}
-	<body>
+	<body class="bg-blue-50 font-sans">
 		<header class="bg-gradient-to-r from-blue-600 to-blue-500 text-white relative z-50">
 			<div
-				class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+				class="max-w-7xl mx-auto py-4 flex justify-between items-center relative">
+
 				<!-- Logo -->
-				<div class="text-xl font-bold ">
-					<a href="{{ path('app_home') }}" class="hover:text-gray-200">ServiceConnect</a>
+				<div class="text-xl font-bold hidden sm:block">
+					<a href="{{ path('app_home') }}" class="hover:text-gray-200">FlashService</a>
+				</div>
+
+				<!-- Barre de recherche centrée -->
+				<div class="flex-1 flex justify-center absolute left-1/2 transform -translate-x-1/2 px-4 sm:px-0">
+					<input type="text" placeholder="Rechercher un service..." class="w-60 sm:w-96 h-9 rounded-full px-4 text-black border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"/>
 				</div>
 
 				<!-- Menu Desktop -->
 				<nav class="hidden md:flex space-x-6 items-center">
 					<a href="{{ path('app_home') }}" class="hover:text-gray-200 font-semibold">Accueil</a>
 					<a href="#" class="hover:text-gray-200 font-semibold">Services</a>
-					<input type="text" placeholder="Rechercher un service..." class="rounded-full px-4 py-1 text-black ">
 					<a href="{{ path('app_my_account') }}" class="hover:text-gray-200 flex items-center space-x-1 font-semibold">
 						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.485 0 4.8.735 6.879 2.004M15 10a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -48,7 +54,7 @@
 
 				<!-- Menu Burger -->
 				<button id="burger-btn" class="md:hidden focus:outline-none">
-					<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<svg class="w-7 h- mx-3" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
 					</svg>
 				</button>
@@ -79,7 +85,7 @@
 			{% endblock %}
 		</main>
 
-		<footer class="bg-gray-800 text-gray-300 pt-8 pb-6 mt-12">
+		<footer class="bg-gray-800 text-gray-300 pt-8 pb-6">
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div
 					class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-6 md:space-y-0">
@@ -146,7 +152,5 @@ burgerBtn.addEventListener('click', openMenu);
 closeBtn.addEventListener('click', closeMenu);
 overlay.addEventListener('click', closeMenu);
 		</script>
-
-
 	</body>
 </html>

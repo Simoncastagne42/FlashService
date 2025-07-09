@@ -92,15 +92,15 @@ final class ProfilController extends AbstractController
     {
         /** @var \App\Entity\User $user */
         $user = $security->getUser();
-    
-        if (!$user || !$user->getClient()) {
-            $this->addFlash('error', 'Vous devez être connecté en tant que client pour voir vos réservations.');
-            return $this->redirectToRoute('app_login');
+
+        if ($user && !$user->getClient()) {
+            $this->addFlash('info', 'Complétez votre profil pour accéder à vos réservations.');
+            return $this->redirectToRoute('app_profil_infos');
         }
-    
+
         $client = $user->getClient();
         $reservations = $reservationRepo->findBy(['client' => $client]);
-    
+
         return $this->render('account/profil/profil_reservations.html.twig', [
             'reservations' => $reservations,
         ]);

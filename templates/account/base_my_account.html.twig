@@ -2,10 +2,11 @@
 {% block title %}Mon compte
 {% endblock %}
 {% block body %}
-	<div class="min-h-screen bg-gray-100 p-8">
-	
+	<div class="min-h-screen bg-blue-50 p-8">
 
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+		<div
+			class="grid grid-cols-1 md:grid-cols-3 gap-8">
 			<!-- Sidebar (fixe) -->
 			<div class="bg-white rounded shadow p-6 h-fit top-8">
 				<h1 class="text-2xl font-semibold mb-6 flex justify-center">Mon Compte</h1>
@@ -32,7 +33,7 @@
 				<div class="mt-6 space-y-4">
 					{% if 'ROLE_CLIENT' in app.user.roles %}
 						<a href="{{ path('app_profil_reservations') }}" class="flex items-center px-4 py-2 rounded
-																																																														              {% if app.request.attributes.get('_route') == 'app_profil_reservations' %}bg-blue-700 text-white{% else %}hover:bg-gray-200{% endif %}">
+																																																																						              {% if app.request.attributes.get('_route') == 'app_profil_reservations' %}bg-blue-700 text-white{% else %}hover:bg-gray-200{% endif %}">
 							<i class="fas fa-calendar-check mr-2"></i>
 							Mes réservations
 						</a>
@@ -43,13 +44,19 @@
 							Accès Dashboard
 						</a>
 					{% endif %}
+					{% if 'ROLE_ADMIN' in app.user.roles %}
+						<a href="{{ path('admin') }}" class="flex items-center px-4 py-2 rounded hover:bg-gray-200">
+							<i class="fas fa-tachometer-alt mr-2"></i>
+							Accès Dashboard
+						</a>
+					{% endif %}
 					<a href="{{ path('app_profil_infos') }}" class="flex items-center px-4 py-2 rounded
-																																																									              {% if app.request.attributes.get('_route') == 'app_profil_infos' %}bg-blue-700 text-white{% else %}hover:bg-gray-200{% endif %}">
+																																																																              {% if app.request.attributes.get('_route') == 'app_profil_infos' %}bg-blue-700 text-white{% else %}hover:bg-gray-200{% endif %}">
 						<i class="fas fa-user-cog mr-2"></i>
 						Informations personnelles
 					</a>
 					<a href="{{ path('app_profil_settings') }}" class="flex items-center px-4 py-2 rounded
-																																																									              {% if app.request.attributes.get('_route') == 'app_profil_settings' %}bg-blue-700 text-white{% else %}hover:bg-gray-200{% endif %}">
+																																																																              {% if app.request.attributes.get('_route') == 'app_profil_settings' %}bg-blue-700 text-white{% else %}hover:bg-gray-200{% endif %}">
 						<i class="fas fa-cog mr-2"></i>
 						Paramètres
 					</a>
@@ -67,50 +74,3 @@
 		</div>
 	</div>
 {% endblock %}
-
-{# <!-- Réservations à droite -->
-				<div class="md:col-span-2">
-					<h3 class="text-xl font-semibold mb-4">Mes réservations</h3>
-	
-					<!-- Réservations à venir -->
-					<div class="mb-6">
-						<h4 class="text-lg font-medium mb-2">Réservations à venir</h4>
-						<div class="bg-white p-4 rounded shadow flex justify-between items-center">
-							<div>
-								<h5 class="font-semibold">Plombier professionnel</h5>
-								<p class="text-sm text-gray-500">📅 jeudi 15 mai 2025 à 14:00 | 📍 Paris</p>
-								<p class="font-medium mt-1">80€</p>
-							</div>
-							<div class="space-x-2">
-								<button class="px-4 py-2 border rounded hover:bg-gray-100">Modifier</button>
-								<button class="px-4 py-2 border border-red-500 text-red-500 hover:bg-red-100">Annuler</button>
-							</div>
-						</div>
-					</div>
-	
-					<!-- Réservations passées -->
-					<div>
-						<h4 class="text-lg font-medium mb-2">Réservations passées</h4>
-	
-						<div class="bg-white p-4 rounded shadow mb-4 flex justify-between items-center">
-							<div>
-								<h5 class="font-semibold">Photographe événementiel</h5>
-								<p class="text-sm text-gray-500">📅 samedi 10 mai 2025 à 10:00 | 📍 Bordeaux</p>
-								<p class="font-medium mt-1">150€</p>
-							</div>
-							<button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Laisser un avis</button>
-						</div>
-	
-						<div class="bg-white p-4 rounded shadow flex justify-between items-center">
-							<div>
-								<h5 class="font-semibold">Cours de yoga à domicile</h5>
-								<p class="text-sm text-gray-500">📅 lundi 28 avril 2025 à 16:00 | 📍 Lyon</p>
-								<p class="font-medium mt-1">60€</p>
-							</div>
-							<button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Laisser un avis</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div> #}
-{# {% endblock %} #}
