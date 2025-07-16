@@ -71,15 +71,30 @@ class ServiceCrudController extends AbstractCrudController
     {
         if (!$entityInstance instanceof Service) return;
 
-        /** @var Professionnal */
+        /** @var User $user */
         $user = $this->security->getUser();
-        $professional = $user->getProfessional();
+        $professional = $user?->getProfessional();
 
         if ($professional) {
             $entityInstance->setProfessional($professional);
         }
-     
+
         parent::persistEntity($entityManager, $entityInstance);
+        $this->addFlash('success', 'Le service a bien été ajouté !');
+    }
+
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        parent::deleteEntity($entityManager, $entityInstance);
+        $this->addFlash('success', 'Le service a bien été supprimé !');
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance instanceof Service) return;
+
+        parent::updateEntity($entityManager, $entityInstance);
+        $this->addFlash('success', 'Le service a bien été modifié !');
     }
 
 }

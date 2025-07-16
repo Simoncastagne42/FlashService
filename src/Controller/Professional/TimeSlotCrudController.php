@@ -79,5 +79,20 @@ class TimeSlotCrudController extends AbstractCrudController
         }
 
         parent::persistEntity($entityManager, $entityInstance);
+        $this->addFlash('success', 'Le créneau a bien été ajouté !');
+    }
+
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        parent::deleteEntity($entityManager, $entityInstance);
+        $this->addFlash('success', 'Le créneau a bien été supprimé !');
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance instanceof TimeSlot) return;
+
+        parent::updateEntity($entityManager, $entityInstance);
+        $this->addFlash('success', 'Le créneau a bien été modifié !');
     }
 }

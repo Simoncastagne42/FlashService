@@ -18,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ReservationCrudController extends AbstractCrudController
 {
@@ -98,5 +99,34 @@ class ReservationCrudController extends AbstractCrudController
                 Reservation::STATUS_CONFIRMED => 'success',
                 Reservation::STATUS_CANCELLED => 'danger',
             ]);
+    }
+
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance instanceof Reservation) return;
+
+        parent::persistEntity($entityManager, $entityInstance);
+        $this->addFlash('success', 'La réservation a bien été ajoutée !');
+    }
+
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        parent::deleteEntity($entityManager, $entityInstance);
+        $this->addFlash('success', 'La réservation a bien été supprimée !');
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance instanceof Reservation) return;
+
+        parent::updateEntity($entityManager, $entityInstance);
+
+        if ($entityInstance->getStatut() === Reservation::STATUS_CONFIRMED) {
+            $this->addFlash('success', 'La réservation a bien été confirmée !');
+        } elseif ($entityInstance->getStatut() === Reservation::STATUS_CANCELLED) {
+            $this->addFlash('success', 'La réservation a bien été annulée !');
+        } else {
+            $this->addFlash('success', 'La réservation a bien été modifiée !');
+        }
     }
 }

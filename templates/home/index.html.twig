@@ -1,60 +1,105 @@
 {% extends 'base.html.twig' %}
 
 
-{% block title %}Welcome!
+{% block title %}Bienvenue
 {% endblock %}
 
 {% block body %}
 	<body>
 		<div class="container mx-auto px-4 py-8">
-			{% for label, messages in app.flashes %}
-				{% for message in messages %}
-					<div class="text-white bg-{{ label == 'success' ? 'green' : 'red' }}-500 p-3 rounded my-3">
-						{{ message }}
+			
+			<div class="text-center mb-8">
+				<h1 class="text-4xl font-bold text-black">Trouvez et réservez facilement tous vos services du quotidien</h1>
+			</div>
+
+			<section class="bg-blue-50 py-8">
+				<div class="max-w-6xl mx-auto px-4 text-center">
+					<h2 class="text-3xl font-extrabold text-gray-900 mb-4">Comment ça marche</h2>
+					<p class="text-gray-600 mb-12">Réserver un service n'a jamais été aussi simple</p>
+
+					<div
+						class="grid grid-cols-1 md:grid-cols-3 gap-8">
+						<!-- Étape 1 -->
+						<div class="bg-white shadow-md rounded-lg p-6">
+							<div class="flex justify-center mb-4">
+								<div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+									<svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+									</svg>
+								</div>
+							</div>
+							<h3 class="font-semibold text-lg mb-2">1. Recherchez</h3>
+							<p class="text-gray-600">Parcourez notre sélection de services et trouvez le professionnel qui correspond à vos besoins.</p>
+						</div>
+
+						<!-- Étape 2 -->
+						<div class="bg-white shadow-md rounded-lg p-6">
+							<div class="flex justify-center mb-4">
+								<div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+									<svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+									</svg>
+								</div>
+							</div>
+							<h3 class="font-semibold text-lg mb-2">2. Réservez</h3>
+							<p class="text-gray-600">Choisissez une date et une heure qui vous conviennent et réservez en quelques clics.</p>
+						</div>
+
+						<!-- Étape 3 -->
+						<div class="bg-white shadow-md rounded-lg p-6">
+							<div class="flex justify-center mb-4">
+								<div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+									<svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.917c.969 0 1.371 1.24.588 1.81l-3.977 2.89a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.54 1.118l-3.977-2.89a1 1 0 00-1.176 0l-3.977 2.89c-.785.57-1.84-.197-1.54-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.466 10.1c-.783-.57-.38-1.81.588-1.81h4.917a1 1 0 00.95-.69l1.518-4.674z"/>
+									</svg>
+								</div>
+							</div>
+							<h3 class="font-semibold text-lg mb-2">3. Profitez</h3>
+							<p class="text-gray-600">Recevez votre service et partagez votre expérience en laissant un avis.</p>
+						</div>
 					</div>
-				{% endfor %}
-			{% endfor %}
-			<header class="text-center mb-8">
-				<h1 class="text-4xl font-bold text-blue-600">Bienvenue sur notre plateforme !</h1>
-				<p class="mt-2 text-lg font-semibold">Trouvez et réservez facilement tous vos services du quotidien</p>
-			</header>
-
-
-			<section class="py-12">
+				</div>
+			</section>
+			<section class="py-8">
 				<div class="container mx-auto px-4">
 					<h2 class="text-2xl font-bold text-center mb-8">Les Services</h2>
-
 
 					{% if services is empty %}
 						<p class="text-center text-gray-500">Aucun service disponible pour le moment.</p>
 					{% else %}
 						<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 							{% for service in services %}
-								<div class="bg-white p-6 rounded-lg shadow-md">
-									<h3 class="text-lg font-semibold mb-2">{{ service.name }}</h3>
-									<p class="text-gray-600 text-sm break-words">{{ service.description }}</p>
-									<p class="text-blue-600 font-bold mt-2">{{ service.price / 100 }}
-										€</p>
-									<div class="text-xs text-gray-400 mt-1 flex flex-col space-y-1">
-										<span>
-											<strong>Proposé par :</strong>
-											{{ service.professional.compagnyName ?? 'Professionnel inconnu' }}</span>
-										<span>
-											<strong>Ville :</strong>
-											{{ service.professional.cityCompagny ?? 'Ville inconnue' }}</span>
-										<span>
-											<strong>Code postal :</strong>
-											{{ service.professional.zipCodeCompagny ?? 'Code postal inconnu' }}</span>
+								<a href="{{ path('service_reserver', {id: service.id}) }}" class="block bg-white p-6 rounded-lg border hover:shadow-lg border-gray-200 hover:border-2 hover:border-blue-500 transition duration-100 cursor-pointer">
+									<h3 class="text-black text-xl font-bold mb-2">{{ service.name }}</h3>
+
+									<p class="text-gray-600 text-base break-words">
+										{{ service.description|length > 50 ? service.description|slice(0, 50) ~ '…' : service.description }}
+									</p>
+
+									<p class="text-blue-600 font-bold mt-2 text-base">
+										{{ service.price / 100 }}
+										€
+									</p>
+
+									<div class="text-gray-500 text-base mt-1 flex items-center space-x-1">
+										<svg class="w-4 h-4 text-gray-400" fill="currentColor" viewbox="0 0 20 20">
+											<path fill-rule="evenodd" d="M10 2a6 6 0 00-6 6c0 4.5 6 10 6 10s6-5.5 6-10a6 6 0 00-6-6zM8 8a2 2 0 114 0 2 2 0 01-4 0z" clip-rule="evenodd"/>
+										</svg>
+										<span>{{ service.professional.cityCompagny ?? 'Ville inconnue' }}</span>
 									</div>
-									<a href="{{ path('service_reserver', {id: service.id}) }}" class="inline-block mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-										Réserver
-									</a>
-								</div>
+
+									<div class="mt-4 flex justify-center">
+										<span class="bg-blue-500 text-white text-sm px-4 py-2 rounded hover:bg-blue-600">
+											Voir plus
+										</span>
+									</div>
+								</a>
 							{% endfor %}
 						</div>
 					{% endif %}
 				</div>
 			</section>
+
 		</div>
 	</body>
 
