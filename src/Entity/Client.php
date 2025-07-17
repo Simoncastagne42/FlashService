@@ -183,7 +183,12 @@ class Client
     }
 
     public function __toString(): string
-{
-    return ($this->getFirstName() . ' ' . $this->getLastName()) ?: 'Client';
-}
+    {
+        return $this->getFullName();
+    }
+
+    public function getFullName(): string
+    {
+        return ($this->getFirstName() . ' ' . $this->getLastName()) ?: 'Client';
+    }
 }

@@ -7,19 +7,24 @@
 {% block body %}
 	<body>
 		<div class="container mx-auto px-4 py-8">
-			
-			<div class="text-center mb-8">
-				<h1 class="text-4xl font-bold text-black">Trouvez et réservez facilement tous vos services du quotidien</h1>
+			<h1 class="text-4xl font-bold text-black mb-8 text-center">
+				Trouvez et réservez facilement tous vos services du quotidien
+			</h1>
+			<div class="flex flex-col md:flex-row items-center mb-8 gap-8">
+				<div class="flex-shrink-0 w-full md:w-1/2 flex justify-center">
+					<img src="{{ asset('images/accueil-banner.png') }}" alt="femme avec une loupe" class="max-w-xs w-full h-auto rounded-lg shadow-md">
+				</div>
+				<div class="w-full md:w-1/2 text-center md:text-left">
+					<h2 class="text-3xl font-extrabold text-gray-900 mb-2">Comment ça marche</h2>
+					<p class="text-xl text-gray-800 mb-6">Réserver un service n'a jamais été aussi simple</p>
+				</div>
 			</div>
-
 			<section class="bg-blue-50 py-8">
 				<div class="max-w-6xl mx-auto px-4 text-center">
-					<h2 class="text-3xl font-extrabold text-gray-900 mb-4">Comment ça marche</h2>
-					<p class="text-gray-600 mb-12">Réserver un service n'a jamais été aussi simple</p>
 
 					<div
 						class="grid grid-cols-1 md:grid-cols-3 gap-8">
-						<!-- Étape 1 -->
+						{# Étape 1 #}
 						<div class="bg-white shadow-md rounded-lg p-6">
 							<div class="flex justify-center mb-4">
 								<div class="bg-blue-100 text-blue-600 p-3 rounded-full">
@@ -29,10 +34,10 @@
 								</div>
 							</div>
 							<h3 class="font-semibold text-lg mb-2">1. Recherchez</h3>
-							<p class="text-gray-600">Parcourez notre sélection de services et trouvez le professionnel qui correspond à vos besoins.</p>
+							<p class="text-gray-800">Parcourez notre sélection de services et trouvez le professionnel qui correspond à vos besoins.</p>
 						</div>
 
-						<!-- Étape 2 -->
+						{# Étape 2 #}
 						<div class="bg-white shadow-md rounded-lg p-6">
 							<div class="flex justify-center mb-4">
 								<div class="bg-blue-100 text-blue-600 p-3 rounded-full">
@@ -42,10 +47,10 @@
 								</div>
 							</div>
 							<h3 class="font-semibold text-lg mb-2">2. Réservez</h3>
-							<p class="text-gray-600">Choisissez une date et une heure qui vous conviennent et réservez en quelques clics.</p>
+							<p class="text-gray-800">Choisissez une date et une heure qui vous conviennent et réservez en quelques clics.</p>
 						</div>
 
-						<!-- Étape 3 -->
+						{# Étape 3 #}
 						<div class="bg-white shadow-md rounded-lg p-6">
 							<div class="flex justify-center mb-4">
 								<div class="bg-blue-100 text-blue-600 p-3 rounded-full">
@@ -55,24 +60,25 @@
 								</div>
 							</div>
 							<h3 class="font-semibold text-lg mb-2">3. Profitez</h3>
-							<p class="text-gray-600">Recevez votre service et partagez votre expérience en laissant un avis.</p>
+							<p class="text-gray-800">Recevez votre service et partagez votre expérience en laissant un avis.</p>
 						</div>
 					</div>
 				</div>
 			</section>
+			{# Section services cards #}
 			<section class="py-8">
 				<div class="container mx-auto px-4">
 					<h2 class="text-2xl font-bold text-center mb-8">Les Services</h2>
 
 					{% if services is empty %}
-						<p class="text-center text-gray-500">Aucun service disponible pour le moment.</p>
+						<p class="text-center text-gray 500">Aucun service disponible pour le moment.</p>
 					{% else %}
 						<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 							{% for service in services %}
 								<a href="{{ path('service_reserver', {id: service.id}) }}" class="block bg-white p-6 rounded-lg border hover:shadow-lg border-gray-200 hover:border-2 hover:border-blue-500 transition duration-100 cursor-pointer">
 									<h3 class="text-black text-xl font-bold mb-2">{{ service.name }}</h3>
 
-									<p class="text-gray-600 text-base break-words">
+									<p class="text-gray-800 text-base break-words">
 										{{ service.description|length > 50 ? service.description|slice(0, 50) ~ '…' : service.description }}
 									</p>
 
@@ -81,8 +87,8 @@
 										€
 									</p>
 
-									<div class="text-gray-500 text-base mt-1 flex items-center space-x-1">
-										<svg class="w-4 h-4 text-gray-400" fill="currentColor" viewbox="0 0 20 20">
+									<div class="text-gray-800 text-base mt-1 flex items-center space-x-1">
+										<svg class="w-4 h-4 text-gray-800" fill="currentColor" viewbox="0 0 20 20">
 											<path fill-rule="evenodd" d="M10 2a6 6 0 00-6 6c0 4.5 6 10 6 10s6-5.5 6-10a6 6 0 00-6-6zM8 8a2 2 0 114 0 2 2 0 01-4 0z" clip-rule="evenodd"/>
 										</svg>
 										<span>{{ service.professional.cityCompagny ?? 'Ville inconnue' }}</span>

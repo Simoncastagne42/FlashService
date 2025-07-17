@@ -27,13 +27,13 @@
 
 					<h2 class="mt-4 font-semibold">{{ firstName }}
 						{{ lastName }}</h2>
-					<p class="text-sm text-gray-500">{{ app.user.email }}</p>
+					<p class="text-sm text-gray-800">{{ app.user.email }}</p>
 				</div>
 
 				<div class="mt-6 space-y-4">
 					{% if 'ROLE_CLIENT' in app.user.roles %}
 						<a href="{{ path('app_profil_reservations') }}" class="flex items-center px-4 py-2 rounded
-																																																																						              {% if app.request.attributes.get('_route') == 'app_profil_reservations' %}bg-blue-700 text-white{% else %}hover:bg-gray-200{% endif %}">
+														{% if app.request.attributes.get('_route') == 'app_profil_reservations' %}bg-blue-700 text-white{% else %}hover:bg-gray-200{% endif %}">
 							<i class="fas fa-calendar-check mr-2"></i>
 							Mes réservations
 						</a>
@@ -51,12 +51,12 @@
 						</a>
 					{% endif %}
 					<a href="{{ path('app_profil_infos') }}" class="flex items-center px-4 py-2 rounded
-																																																																              {% if app.request.attributes.get('_route') == 'app_profil_infos' %}bg-blue-700 text-white{% else %}hover:bg-gray-200{% endif %}">
+												{% if app.request.attributes.get('_route') == 'app_profil_infos' %}bg-blue-700 text-white{% else %}hover:bg-gray-200{% endif %}">
 						<i class="fas fa-user-cog mr-2"></i>
 						Informations personnelles
 					</a>
 					<a href="{{ path('app_profil_settings') }}" class="flex items-center px-4 py-2 rounded
-																																																																              {% if app.request.attributes.get('_route') == 'app_profil_settings' %}bg-blue-700 text-white{% else %}hover:bg-gray-200{% endif %}">
+												{% if app.request.attributes.get('_route') == 'app_profil_settings' %}bg-blue-700 text-white{% else %}hover:bg-gray-200{% endif %}">
 						<i class="fas fa-cog mr-2"></i>
 						Paramètres
 					</a>

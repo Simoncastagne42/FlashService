@@ -5,6 +5,7 @@ namespace App\Controller\Professional;
 
 use App\Entity\Reservation;
 use App\Entity\User;
+use App\Service\MailService;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection as CollectionFilterCollection;
@@ -24,7 +25,8 @@ class ReservationCrudController extends AbstractCrudController
 {
     public function __construct(
         private Security $security,
-        private EntityRepository $entityRepository
+        private EntityRepository $entityRepository,
+        private MailService $mailService
     ) {}
 
     public static function getEntityFqcn(): string
@@ -77,9 +79,9 @@ class ReservationCrudController extends AbstractCrudController
         yield TextField::new('clientAdress', 'Adresse du client')
             ->setDisabled(true);
         yield TextField::new('clientZipCode', 'Code postal du client')
-            ->setDisabled(true);    
-            yield TextField::new('clientCity', 'Ville du client')
-            ->setDisabled(true);    
+            ->setDisabled(true);
+        yield TextField::new('clientCity', 'Ville du client')
+            ->setDisabled(true);
         yield DateField::new('timeSlot.date', 'Date');
 
         yield TimeField::new('timeSlot.heureDebut', 'Heure de début')
@@ -123,10 +125,39 @@ class ReservationCrudController extends AbstractCrudController
 
         if ($entityInstance->getStatut() === Reservation::STATUS_CONFIRMED) {
             $this->addFlash('success', 'La réservation a bien été confirmée !');
+
+            // Envoi du mail de confirmation au client
+            $this->mailService->sendReservationConfirmed(
+                $entityInstance->getClient()->getFullName(),
+                $entityInstance->getClient()->getUser()->getEmail(),
+                $entityInstance->getService()->getProfessional()->getCompagnyName(),
+                $entityInstance->getService()->getProfessional()->getCityCompagny(),
+                $entityInstance->getTimeSlot()->getDate(),
+                $entityInstance->getHeureDebut()?->format('H:i'),
+                $entityInstance->getService()->getPrice()
+            );
         } elseif ($entityInstance->getStatut() === Reservation::STATUS_CANCELLED) {
             $this->addFlash('success', 'La réservation a bien été annulée !');
+            $this->mailService->sendReservationCancelled(
+                $entityInstance->getClient()->getFullName(),
+                $entityInstance->getClient()->getUser()->getEmail(),
+                $entityInstance->getService()->getProfessional()->getCompagnyName(),
+                $entityInstance->getService()->getProfessional()->getCityCompagny(),
+                $entityInstance->getTimeSlot()->getDate(),
+                $entityInstance->getHeureDebut()?->format('H:i'),
+                $entityInstance->getService()->getPrice()
+            );
         } else {
             $this->addFlash('success', 'La réservation a bien été modifiée !');
+            $this->mailService->sendReservationUpdated(
+                $entityInstance->getClient()->getFullName(),
+                $entityInstance->getClient()->getUser()->getEmail(),
+                $entityInstance->getService()->getProfessional()->getCompagnyName(),
+                $entityInstance->getService()->getProfessional()->getCityCompagny(),
+                $entityInstance->getTimeSlot()->getDate(),
+                $entityInstance->getHeureDebut()?->format('H:i'),
+                $entityInstance->getService()->getPrice()
+            );
         }
     }
 }

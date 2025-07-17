@@ -18,13 +18,13 @@
 
 
 		<div class="mb-4">
-			{{ form_label(form.currentPassword, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+			{{ form_label(form.currentPassword, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-800'}}) }}
 			{{ form_widget(form.currentPassword, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-400'}}) }}
 			{{ form_errors(form.currentPassword) }}
 		</div>
 
 		<div class="mb-4">
-			{{ form_label(form.newPassword.first, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+			{{ form_label(form.newPassword.first, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-800'}}) }}
 			{{ form_widget(form.newPassword.first, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-400'}}) }}
 			{% for error in form.newPassword.first.vars.errors %}
 				<p class="text-sm text-red-600 mt-1">{{ error.message }}</p>
@@ -32,7 +32,7 @@
 		</div>
 
 		<div class="mb-4">
-			{{ form_label(form.newPassword.second, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+			{{ form_label(form.newPassword.second, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-800'}}) }}
 			{{ form_widget(form.newPassword.second, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-400'}}) }}
 			{{ form_errors(form.newPassword.second) }}
 		</div>

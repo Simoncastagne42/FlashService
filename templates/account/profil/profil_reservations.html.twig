@@ -1,47 +1,70 @@
 {% extends 'account/base_my_account.html.twig' %}
 
 {% block content_account %}
+	<div class="max-w-4xl mx-auto mt-10">
+		<h1 class="text-2xl font-bold mb-6">Mes Réservations</h1>
 
-<div class="max-w-4xl mx-auto mt-10">
-    <h1 class="text-2xl font-bold mb-6">Mes Réservations</h1>
+		{% if reservations is empty %}
+			<p class="text-gray-800">Vous n'avez pas encore effectué de réservation.</p>
+		{% else %}
+			<div class="space-y-6">
+				{% for reservation in reservations %}
+					<div
+						class="p-6 bg-white shadow-md rounded-lg flex flex-col md:flex-row justify-between gap-4">
 
-    {% if reservations is empty %}
-        <p class="text-gray-600">Vous n'avez pas encore effectué de réservation.</p>
-    {% else %}
-        <div class="space-y-6">
-            {% for reservation in reservations %}
-                <div class="bg-white flex justify-between items-center p-5 border rounded-lg shadow-sm hover:shadow-xl  hover:border-blue-500 transition duration-100">
-                    <div class="flex items-start gap-4">
-            
-                        <div>
-                            <h3 class="text-lg font-semibold">{{ reservation.service.name }}</h3>
-                            <p class="text-sm text-gray-600">
-                                📅 {{ reservation.timeSlot.date|date('l d F Y') }} de {{ reservation.timeSlot.heureDebut|date('H:i') }} à {{ reservation.timeSlot.heureFin|date('H:i') }}<br>
-                                💰 {{ reservation.service.price /100 }}€
-                            </p>
-                            <p class="mt-1">
-                                <strong>Statut :</strong>
-                                {% if reservation.statut == 'en_attente' %}
-                                    <span class="text-yellow-300 font-semibold">En attente</span>
-                                {% elseif reservation.statut == 'confirmée' %}
-                                    <span class="text-green-600 font-semibold">Confirmée</span>
-                                {% elseif reservation.statut == 'annulée' %}
-                                    <span class="text-red-600 font-semibold">Annulée</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-2 text-right">
-                        <a href="{{ path('reservation_modifier', { id: reservation.id }) }}"  class="px-3 py-1 border border-blue-600 text-blue-600 hover:bg-blue-200 rounded text-sm font-medium">Modifier</a>
-                        <a href="{{ path('reservation_annuler', { id: reservation.id }) }}"
-                            class="px-3 py-1 border border-red-600 text-red-600 hover:bg-red-200 rounded text-sm font-medium"
-                           onclick="return confirm('Annuler cette réservation ?');">
-                           Annuler
-                        </a>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-</div>
+						<!-- Informations de réservation -->
+						<div class="flex-1 space-y-3">
+							<h3 class="text-lg font-semibold text-gray-900">{{ reservation.service.name }}</h3>
+
+							<div class="text-sm text-gray-700 space-y-1">
+								<p class="flex items-start">
+									<span class="mr-2">📅</span>
+									<span>
+										<strong class="text-gray-800">Date et heure :</strong><br>
+										{{ reservation.timeSlot.date|date('l d F Y') }}<br>
+										de
+										{{ reservation.timeSlot.heureDebut|date('H:i') }}
+										à
+										{{ reservation.timeSlot.heureFin|date('H:i') }}
+									</span>
+								</p>
+
+								<p class="flex items-start">
+									<span class="mr-2">💰</span>
+									<span>
+										<strong class="text-gray-800">Montant à régler :</strong><br>
+										<span class="text-gray-900 font-medium">{{ reservation.service.price / 100 }}
+											€</span>
+									</span>
+								</p>
+
+								<p>
+									<strong class="text-gray-800">Statut :</strong>
+									{% if reservation.statut == 'en_attente' %}
+										<span class="text-yellow-500 font-semibold">En attente</span>
+									{% elseif reservation.statut == 'confirmée' %}
+										<span class="text-green-600 font-semibold">Confirmée</span>
+									{% elseif reservation.statut == 'annulée' %}
+										<span class="text-red-600 font-semibold">Annulée</span>
+									{% endif %}
+								</p>
+							</div>
+						</div>
+
+						<!-- Actions centrées verticalement -->
+						<div class="flex flex-col gap-2 self-center">
+							{% if reservation.statut == 'en_attente' %}
+								<a href="{{ path('reservation_modifier', { id: reservation.id }) }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200">
+									Modifier
+								</a>
+								<a href="{{ path('reservation_annuler', { id: reservation.id }) }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-200" onclick="return confirm('Annuler cette réservation ?');">
+									Annuler
+								</a>
+							{% endif %}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
 {% endblock %}

@@ -31,7 +31,7 @@
 
 				<div class="flex items-center">
 					<input type="checkbox" name="_remember_me" id="_remember_me" class="mr-2 hover:cursor-pointer">
-					<label for="_remember_me" class="text-sm text-gray-700 hover:cursor-pointer">Se souvenir de moi</label>
+					<label for="_remember_me" class="text-sm text-gray-800 hover:cursor-pointer">Se souvenir de moi</label>
 				</div>
 
 
@@ -39,14 +39,14 @@
 					Se connecter
 				</button>
 				<div class="mt-6">
-					<a href="{{ path('auth_oauth_connect',{'service': 'google'}) }}" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition">
-						<img src=" {{ asset('img/google.png') }}" alt="logo google" class="mr-4 w-6 h-6">
+					<a href="{{ path('auth_oauth_connect',{'service': 'google'}) }}" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-800 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition">
+						<img src=" {{ asset('images/google.png') }}" alt="logo google" class="mr-4 w-6 h-6">
 						Se connecter avec Google
 					</a>
 				</div>
 			</form>
 			<div class="text-center mt-5">
-				<p class="text-sm text-gray-600 flex flex-col gap-1">
+				<p class="text-sm text-gray-800 flex flex-col gap-1">
 					Pas encore de compte ?
 					<a href="{{ path('app_register') }}" class="font-bold text-blue-600  hover:text-blue-700">
 						Inscription
