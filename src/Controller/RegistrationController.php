@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,7 +13,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use App\Security\LoginFormAuthenticator;
-
+use Symfony\Component\Form\FormError;
 
 class RegistrationController extends AbstractController
 {
@@ -22,7 +23,8 @@ class RegistrationController extends AbstractController
         UserPasswordHasherInterface $hasher,
         EntityManagerInterface $entityManager,
         UserAuthenticatorInterface $userAuthenticator,
-        LoginFormAuthenticator $authenticator
+        LoginFormAuthenticator $authenticator,
+        UserRepository $userRepository
     ): Response {
         $user = new User();
 
@@ -30,25 +32,31 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
-            $user = $form->getData();
-            $plainPassword = $form->get('plainPassword')->getData();
-            $hashedPassword = $hasher->hashPassword($user, $plainPassword);
-            $user->setPassword($hashedPassword);
+            // 🔍 Vérifie si l'email existe déjà
+            $existingUser = $userRepository->findOneBy(['email' => $user->getEmail()]);
 
-            $role = $form->get('role')->getData();
-            $user->setRoles([$role]);
+            if ($existingUser) {
+                $form->get('email')->addError(new FormError('Cette adresse email est déjà utilisée.'));
+            } else {
+                $user = $form->getData();
+                $plainPassword = $form->get('plainPassword')->getData();
+                $hashedPassword = $hasher->hashPassword($user, $plainPassword);
+                $user->setPassword($hashedPassword);
 
+                $role = $form->get('role')->getData();
+                $user->setRoles([$role]);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+                $entityManager->persist($user);
+                $entityManager->flush();
 
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request
-            );
+                return $userAuthenticator->authenticateUser(
+                    $user,
+                    $authenticator,
+                    $request
+                );
+            }
         }
+
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);

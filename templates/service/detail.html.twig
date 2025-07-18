@@ -21,7 +21,7 @@
 				<li class="flex items-center gap-3">
 					<span>
 						<strong>Prix :</strong>
-						{{ service.price|number_format(2, ',', '.') }}
+						{{ (service.price / 100) |number_format(2, ',', '.') }}
 						€</span>
 				</li>
 				<li class="flex items-center gap-3">
