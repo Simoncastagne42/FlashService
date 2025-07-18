@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ service.name }}
+	| FlashService
+{% endblock %}
+
+{% block body %}
+	<div
+		class="max-w-6xl mx-auto px-4 py-10 flex flex-col md:flex-row gap-10">
+
+		{# Partie gauche : détails du service #}
+		<div class="w-full md:w-2/3 space-y-6">
+			<h1 class="text-3xl font-bold text-gray-800">{{ service.name }}</h1>
+
+			<p class="text-lg text-gray-700 leading-relaxed">
+				{{ service.description }}
+			</p>
+
+			<ul class="space-y-3 text-gray-700 text-base">
+				<li class="flex items-center gap-3">
+					<span>
+						<strong>Prix :</strong>
+						{{ service.price|number_format(2, ',', '.') }}
+						€</span>
+				</li>
+				<li class="flex items-center gap-3">
+					<span>
+						<strong>Ville :</strong>
+						{{ service.professional.cityCompagny }}</span>
+				</li>
+				<li class="flex items-center gap-3">
+					<span>
+						<strong>Pro :</strong>
+						{{ service.professional.compagnyName }}</span>
+				</li>
+			</ul>
+		</div>
+
+		{# Partie droite : bloc de réservation ou bouton connexion #}
+		<div class="w-full md:w-1/3 bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+			<h2 class="text-lg font-semibold text-gray-800 mb-4">Réserver ce service</h2>
+
+			{% if app.user %}
+				<p class="text-sm text-gray-800 mb-4">
+					Réservez en quelques clics votre créneau avec ce professionnel.
+				</p>
+				<a href="{{ path('service_reserver', { id: service.id }) }}" class="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 shadow">
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+					</svg>
+					Réserver maintenant
+				</a>
+			{% else %}
+				<p class="text-sm text-gray-800 mb-4">
+					Connectez-vous pour réserver ce service et choisir un créneau.
+				</p>
+				<a href="{{ path('app_login') }}" class="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 shadow">
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.735 6.879 2.004M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+					</svg>
+					Se connecter
+				</a>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

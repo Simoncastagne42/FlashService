@@ -54,7 +54,7 @@ final class ReservationController extends AbstractController
         $availableSlots = $timeSlotRepo->findAvailableSlotsForService($service->getId(), $reservedSlotIds);
 
         $form = $this->createForm(ReservationType::class, $reservation, [
-            'available_slots' => $availableSlots,
+            'available_slots' => $availableSlots, // liste filtrée des créneaux du service
         ]);
 
         $form->handleRequest($request);
@@ -211,7 +211,7 @@ final class ReservationController extends AbstractController
         $user = $security->getUser();
         $reservations = $reservationRepository->findBy(
             ['client' => $user->getClient()],
-            ['createdAt' => 'DESC'] 
+            ['createdAt' => 'DESC']
         );
 
         return $this->render('account/profil/profil_reservations.html.twig', [

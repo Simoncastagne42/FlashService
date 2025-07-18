@@ -2,7 +2,11 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Client;
 use App\Entity\Profession;
+use App\Entity\Professional;
+use App\Entity\Reservation;
+use App\Entity\Service;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -42,7 +46,6 @@ class AdminDashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('Dashboard Admin');
-      
     }
 
     public function configureMenuItems(): iterable
@@ -50,6 +53,10 @@ class AdminDashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Accueil', 'fa fa-home');
         yield MenuItem::linkToCrud('Users', 'fa-solid fa-user', User::class);
         yield MenuItem::linkToCrud('Professions', 'fa-solid fa-briefcase', Profession::class);
+        yield MenuItem::linkToCrud('Clients', 'fas fa-user', Client::class);
+        yield MenuItem::linkToCrud('Professionnels', 'fas fa-user-tie', Professional::class);
+         yield MenuItem::linkToCrud('Services', 'fa-solid fa-briefcase', Service::class);
+        yield MenuItem::linkToCrud('Réservations', 'fas fa-calendar-check', Reservation::class);
         yield MenuItem::linkToUrl('Retour au site', 'fas fa-arrow-left', $this->generateUrl('app_my_account'));
     }
 }

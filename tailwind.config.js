@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
        fontFamily: {
-        title: ['Raleway', 'sans-serif'],
+        title: ['"DM Serif Display"', 'serif'],
         sans: ['Poppins', 'sans-serif'],
       },
     },
