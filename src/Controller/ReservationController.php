@@ -31,30 +31,23 @@ final class ReservationController extends AbstractController
         TimeSlotRepository $timeSlotRepository,
         MailService $mailService
     ): Response {
-
         /** @var User|null $user */
         $user = $security->getUser();
-
         // Si ce n’est pas un client
         if (!in_array('ROLE_CLIENT', $user->getRoles())) {
             $this->addFlash('error', 'Vous devez avoir un compte de type "Client" pour réserver.');
             return $this->redirectToRoute('app_home');
         }
-
         // Si le profil client n’est pas encore rempli
         if (!$user->getClient()) {
             $this->addFlash('error', 'Merci de compléter votre profil pour effectuer une réservation.');
 
-            // On stocke l’URL de retour
+            // stock l’URL de retour
             $request->getSession()->set('redirect_after_profile', $request->getUri());
 
             return $this->redirectToRoute('app_profil_infos');
         }
-
-
-
         // Récupérer les créneaux disponibles pour ce service
-
         $availableSlots = $timeSlotRepository->findAvailableSlotsForService($service->getId());
 
         if (empty($availableSlots)) {
@@ -116,6 +109,7 @@ final class ReservationController extends AbstractController
 
 
     #[Route('/reservation/{id}/modifier', name: 'reservation_modifier')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function modifier(
         Request $request,
         Reservation $reservation,
@@ -175,6 +169,7 @@ final class ReservationController extends AbstractController
     }
 
     #[Route('/reservation/{id}/annuler', name: 'reservation_annuler')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function annulerReservation(
         Reservation $reservation,
         Security $security,
@@ -193,10 +188,8 @@ final class ReservationController extends AbstractController
             $this->addFlash('error', 'Vous ne pouvez pas annuler cette réservation.');
             return $this->redirectToRoute('app_profil_reservations');
         }
-
         // Changer juste le statut, garder le timeSlot lié
         $reservation->setStatut(Reservation::STATUS_CANCELLED);
-
         // Envoi des mails
         $mailService->sendReservationCancelledToClient(
             $reservation->getService()->getName(),
@@ -216,9 +209,7 @@ final class ReservationController extends AbstractController
             $reservation->getTimeSlot()->getDate(),
             $reservation->getHeureDebut()?->format('H:i')
         );
-
         $em->flush();
-
         $this->addFlash('success', 'Réservation annulée avec succès.');
         return $this->redirectToRoute('app_profil_reservations');
     }

@@ -118,8 +118,8 @@
 		{% for label, messages in app.flashes %}
 			{% for message in messages %}
 				<div x-data="{ show: true }" x-show="show" class="max-w-md mx-auto flex items-center justify-between
-																																																																																											                           p-4 rounded-lg shadow-lg my-4
-																																																																																											                           {{ label == 'success' ? 'bg-green-100 border border-green-300 text-green-800' : (label == 'info' ? 'bg-blue-100 border border-blue-300 text-blue-800' : 'bg-red-100 border border-red-300 text-red-800') }}">
+																																																																																																													                           p-4 rounded-lg shadow-lg my-4
+																																																																																																													                           {{ label == 'success' ? 'bg-green-100 border border-green-300 text-green-800' : (label == 'info' ? 'bg-blue-100 border border-blue-300 text-blue-800' : 'bg-red-100 border border-red-300 text-red-800') }}">
 					<div class="flex items-center">
 						{% if label == 'success' %}
 							<svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
@@ -148,47 +148,76 @@
 			{% endblock %}
 		</main>
 
-		<footer class="bg-gray-800 text-gray-300 pt-8 pb-6">
+		<footer class="bg-gray-800 text-gray-300 pt-8 pb-6" role="contentinfo">
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div
-					class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-6 md:space-y-0">
-					<!-- Logo & Description -->
-					<div>
-						<h2 class="text-xl font-semibold text-blue-500">FlashService</h2>
+					class="flex flex-col md:flex-row justify-between gap-8">
+
+					<!-- Colonne 1 : Logo + Description -->
+					<div class="flex-1">
+						<img src="{{ asset('images/logo.png') }}" alt="logo FlashService" class="w-60 h-auto">
 						<p class="mt-2 text-sm max-w-xs">Votre plateforme pour réserver facilement tous vos services du quotidien.</p>
 					</div>
 
-					<!-- Liens de navigation -->
-					<div class="space-y-2 ">
-						<a href="{{ path('app_home') }}" class="block hover:text-blue-500 transition">Accueil</a>
-						<a href="#" class="block hover:text-blue-500 transition">Services</a>
-						<a href="{{ path('app_my_account') }}" class="block hover:text-blue-500 transition">Mon Compte</a>
-					</div>
+					<!-- Colonne 2 : Liens principaux -->
+					<nav class="flex-1">
+						<h3 class="text-base text-white font-semibold mb-2">Navigation</h3>
+						<ul class="space-y-1 text-xs">
+							<li>
+								<a href="{{ path('app_home') }}" class="hover:text-blue-500 transition">Accueil</a>
+							</li>
+							<li>
+								<a href="#" class="hover:text-blue-500 transition">Services</a>
+							</li>
+							<li>
+								<a href="{{ path('app_my_account') }}" class="hover:text-blue-500 transition">Mon Compte</a>
+							</li>
+						</ul>
+					</nav>
 
-					<!-- Réseaux sociaux -->
-					<div class="flex space-x-4">
-						<a href="#" class="hover:text-blue-500">
-							<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 24 24">
-								<path d="M22.54 6.42a8.55 8.55 0 01-2.44.67 4.26 4.26 0 001.88-2.36 8.53 8.53 0 01-2.7 1.03 4.24 4.24 0 00-7.22 3.87A12.01 12.01 0 013 4.6a4.24 4.24 0 001.31 5.66 4.2 4.2 0 01-1.92-.53v.05a4.25 4.25 0 003.4 4.17 4.26 4.26 0 01-1.91.07 4.25 4.25 0 003.97 2.95A8.51 8.51 0 012 19.55a12.06 12.06 0 006.52 1.91c7.83 0 12.11-6.49 12.11-12.11 0-.18-.01-.36-.02-.54a8.65 8.65 0 002.12-2.2z"/>
-							</svg>
-						</a>
-						<a href="#" class="hover:text-blue-500">
-							<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 24 24">
-								<path d="M12 2.04c-5.5 0-9.96 4.46-9.96 9.96 0 4.42 3.62 8.09 8.24 8.86v-6.27H8.1v-2.6h2.18V9.78c0-2.16 1.28-3.35 3.24-3.35.94 0 1.92.17 1.92.17v2.1h-1.08c-1.06 0-1.38.66-1.38 1.33v1.6h2.36l-.38 2.6h-1.98v6.27c4.62-.77 8.24-4.44 8.24-8.86 0-5.5-4.46-9.96-9.96-9.96z"/>
-							</svg>
-						</a>
-					</div>
+					<!-- Colonne 3 : Liens légaux -->
+					<nav class="flex-1">
+						<h3 class="text-base text-white font-semibold mb-2">Informations légales</h3>
+						<ul class="space-y-1 text-xs">
+							<li>
+								<a href="{{ path('app_legal_mentions') }}" class="hover:text-blue-500 transition">Mentions légales</a>
+							</li>
+							<li>
+								<a href="{{ path('app_privacy_policy') }}" class="hover:text-blue-500 transition">Politique de confidentialité</a>
+							</li>
+							<li>
+								<a href="{{ path('app_cookie_policy') }}" class="hover:text-blue-500 transition">Gestion des cookies</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+
+				<!-- Réseaux sociaux -->
+				<div class="mt-6 flex justify-center space-x-4">
+					<a
+						href="#" class="hover:text-blue-500" aria-label="Twitter">
+						<!-- Icône Twitter -->
+						<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 24 24" aria-hidden="true">
+							<path d="M22.54 6.42a8.55 8.55 0 01-2.44.67..."/>
+						</svg>
+					</a>
+					<a
+						href="#" class="hover:text-blue-500" aria-label="Facebook">
+						<!-- Icône Facebook -->
+						<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 24 24" aria-hidden="true">
+							<path d="M12 2.04c-5.5 0-9.96 4.46..."/>
+						</svg>
+					</a>
 				</div>
 
 				<!-- Copyright -->
 				<div class="mt-6 border-t border-gray-700 pt-4 text-sm text-center">
 					©
 					{{ "now"|date("Y") }}
-					ServiceConnect. Tous droits réservés.
+					FlashService. Tous droits réservés.
 				</div>
 			</div>
 		</footer>
-
 		<script>
 			// JavaScript pour le menu mobile
 const burgerBtn = document.getElementById('burger-btn');
