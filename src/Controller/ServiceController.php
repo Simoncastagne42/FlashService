@@ -27,17 +27,13 @@ class ServiceController extends AbstractController
 
         // Si soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$this->getUser()) {
-                $this->addFlash('error', 'Vous devez être connecté pour réserver.');
-                return $this->redirectToRoute('app_login');
-            }
-
+           
             $reservation->setClient($this->getUser()); 
             $em->persist($reservation);
             $em->flush();
 
             $this->addFlash('success', 'Réservation enregistrée avec succès !');
-            return $this->redirectToRoute('dashboard_client'); // ou page de confirmation
+            return $this->redirectToRoute('app_profil_reservations'); // ou page de confirmation
         }
 
         // Créneaux liés au service

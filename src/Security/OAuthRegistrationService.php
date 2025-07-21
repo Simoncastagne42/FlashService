@@ -28,7 +28,8 @@ final readonly class OAuthRegistrationService
         $user = match (true) {
             $resourceOwner instanceof GoogleUser => (new User())
                 ->setEmail($resourceOwner->getEmail())
-                ->setGoogleId($resourceOwner->getId()),
+                ->setGoogleId($resourceOwner->getId())
+                ->setIsVerified(true),
 
         };
         

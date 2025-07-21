@@ -110,9 +110,9 @@ class TimeSlot
     }
 
     public function __toString(): string
-{
-    return $this->heureDebut->format('Y-m-d H:i') . ' - ' . $this->heureFin->format('H:i');
-}
+    {
+        return $this->heureDebut->format('Y-m-d H:i') . ' - ' . $this->heureFin->format('H:i');
+    }
 
     public function getService(): ?Service
     {
@@ -124,5 +124,9 @@ class TimeSlot
         $this->service = $service;
 
         return $this;
+    }
+    public function isAvailable(): bool
+    {
+        return $this->reservation === null || $this->reservation->getStatut() === Reservation::STATUS_CANCELLED;
     }
 }

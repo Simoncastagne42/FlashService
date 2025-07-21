@@ -27,6 +27,7 @@ class Reservation
     private ?Service $service = null;
 
     #[ORM\OneToOne(inversedBy: 'reservation', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
     private ?TimeSlot $timeSlot = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
@@ -87,6 +88,9 @@ class Reservation
     public function setTimeSlot(?TimeSlot $timeSlot): static
     {
         $this->timeSlot = $timeSlot;
+        if ($timeSlot !== null && $timeSlot->getReservation() !== $this) {
+            $timeSlot->setReservation($this);
+        }
 
         return $this;
     }

@@ -16,10 +16,12 @@
 						<div class="flex-1 space-y-3">
 							<h3 class="text-lg font-semibold text-gray-900">{{ reservation.service.name }}</h3>
 
-							<div class="text-sm text-gray-700 space-y-1">
+							<div class="text-sm text-gray-800 space-y-1">
 								<p class="flex items-start">
 									<span>
-										<strong class="text-gray-800">Date et heure :</strong><br>
+										{% if reservation.timeSlot.isAvailable %}
+											<strong class="text-gray-800">Date et heure :</strong><br>
+										{% endif %}
 										{{ reservation.timeSlot.date|date('l d F Y') }}<br>
 										de
 										{{ reservation.timeSlot.heureDebut|date('H:i') }}

@@ -28,7 +28,7 @@ final class ProfilController extends AbstractController
 
 {
     #[Route('/my-account', name: 'app_my_account')]
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('IS_AUTHENTICATED_REMEMBERED')]
     public function myAccount(): Response
     {
         return $this->render('account/base_my_account.html.twig');
@@ -76,6 +76,13 @@ final class ProfilController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Profil mis à jour avec succès.');
+            $session = $request->getSession();
+            if ($session->has('redirect_after_profile')) {
+                $redirectUrl = $session->get('redirect_after_profile');
+                $session->remove('redirect_after_profile');
+                return $this->redirect($redirectUrl);
+            }
+
             return $this->redirectToRoute('app_profil_infos');
         }
 
@@ -107,6 +114,7 @@ final class ProfilController extends AbstractController
     }
 
     #[Route('/my-account/settings', name: 'app_profil_settings')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
         /**

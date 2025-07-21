@@ -17,23 +17,17 @@
 				{{ service.description }}
 			</p>
 
-			<ul class="space-y-3 text-gray-700 text-base">
-				<li class="flex items-center gap-3">
-					<span>
-						<strong>Prix :</strong>
-						{{ (service.price / 100) |number_format(2, ',', '.') }}
-						€</span>
-				</li>
-				<li class="flex items-center gap-3">
-					<span>
-						<strong>Ville :</strong>
-						{{ service.professional.cityCompagny }}</span>
-				</li>
-				<li class="flex items-center gap-3">
-					<span>
-						<strong>Pro :</strong>
-						{{ service.professional.compagnyName }}</span>
-				</li>
+			<ul class="space-y-3 text-gray-800 text-base">
+				<li>
+					<strong>Prix :</strong>
+					{{ (service.price / 100)|number_format(2, ',', '.') }}
+					€</li>
+				<li>
+					<strong>Ville :</strong>
+					{{ service.professional.cityCompagny }}</li>
+				<li>
+					<strong>Professionnel :</strong>
+					{{ service.professional.compagnyName }}</li>
 			</ul>
 		</div>
 
@@ -55,7 +49,7 @@
 				<p class="text-sm text-gray-800 mb-4">
 					Connectez-vous pour réserver ce service et choisir un créneau.
 				</p>
-				<a href="{{ path('app_login') }}" class="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 shadow">
+				<a href="{{ path('service_reserver', {id: service.id , redirect: app.request.uri }) }}" class="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 shadow">
 					<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.735 6.879 2.004M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
 					</svg>

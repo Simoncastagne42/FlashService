@@ -41,15 +41,28 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, $token, string $firewallName): ?RedirectResponse
     {
+
+        //  Si on a une URL précédente, on y retourne
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
+        $redirectUrl = $request->query->get('redirect');
+        if ($redirectUrl) {
+            return new RedirectResponse($redirectUrl);
+        }
 
-        return new RedirectResponse($this->router->generate('app_home')); // redirige vers la home après connexion
+        $user = $token->getUser();
+
+        if (in_array('ROLE_PROFESSIONNEL', $user->getRoles(), true)) {
+            return new RedirectResponse($this->router->generate('app_my_account'));
+        }
+
+        return new RedirectResponse($this->router->generate('app_home'));
     }
 
     protected function getLoginUrl(Request $request): string
     {
         return $this->router->generate(self::LOGIN_ROUTE);
     }
+    
 }

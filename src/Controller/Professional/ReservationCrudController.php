@@ -128,6 +128,7 @@ class ReservationCrudController extends AbstractCrudController
 
             // Envoi du mail de confirmation au client
             $this->mailService->sendReservationConfirmed(
+                $entityInstance->getService()->getName(),
                 $entityInstance->getClient()->getFullName(),
                 $entityInstance->getClient()->getUser()->getEmail(),
                 $entityInstance->getService()->getProfessional()->getCompagnyName(),
@@ -139,6 +140,7 @@ class ReservationCrudController extends AbstractCrudController
         } elseif ($entityInstance->getStatut() === Reservation::STATUS_CANCELLED) {
             $this->addFlash('success', 'La réservation a bien été annulée !');
             $this->mailService->sendReservationCancelled(
+                $entityInstance->getService()->getName(),
                 $entityInstance->getClient()->getFullName(),
                 $entityInstance->getClient()->getUser()->getEmail(),
                 $entityInstance->getService()->getProfessional()->getCompagnyName(),
@@ -147,9 +149,11 @@ class ReservationCrudController extends AbstractCrudController
                 $entityInstance->getHeureDebut()?->format('H:i'),
                 $entityInstance->getService()->getPrice()
             );
+    
         } else {
             $this->addFlash('success', 'La réservation a bien été modifiée !');
             $this->mailService->sendReservationUpdated(
+                $entityInstance->getService()->getName(),
                 $entityInstance->getClient()->getFullName(),
                 $entityInstance->getClient()->getUser()->getEmail(),
                 $entityInstance->getService()->getProfessional()->getCompagnyName(),

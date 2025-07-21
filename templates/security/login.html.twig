@@ -39,7 +39,7 @@
 					Se connecter
 				</button>
 				<div class="mt-6">
-					<a href="{{ path('auth_oauth_connect',{'service': 'google'}) }}" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-800 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition">
+					<a href="{{ path('auth_oauth_connect',{'service': 'google', redirect: app.request.uri}) }}" class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-800 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition">
 						<img src=" {{ asset('images/google.png') }}" alt="logo google" class="mr-4 w-6 h-6">
 						Se connecter avec Google
 					</a>

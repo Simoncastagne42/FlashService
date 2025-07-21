@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Reservation;
+use App\Entity\Service;
 use App\Entity\TimeSlot;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -11,24 +13,40 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TimeSlotRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private ReservationRepository $reservationRepository;
+
+    public function __construct(ManagerRegistry $registry, ReservationRepository $reservationRepository)
     {
         parent::__construct($registry, TimeSlot::class);
+        $this->reservationRepository = $reservationRepository;
+    }
+    public function findAvailableSlotsForService(int $serviceId): array
+    {
+        return $this->createQueryBuilder('ts')
+            ->leftJoin('App\Entity\Reservation', 'r', 'WITH', 'r.timeSlot = ts AND r.statut != :cancelled')
+            ->andWhere('ts.service = :service')
+            ->andWhere('r.id IS NULL') // pas de réservation active sur ce créneau
+            ->andWhere('ts.date > :today OR (ts.date = :today AND ts.heureDebut > :now)')
+            ->setParameter('service', $serviceId)
+            ->setParameter('cancelled', \App\Entity\Reservation::STATUS_CANCELLED)
+            ->setParameter('today', new \DateTimeImmutable('today'))
+            ->setParameter('now', new \DateTimeImmutable('now'))
+            ->orderBy('ts.date', 'ASC')
+            ->addOrderBy('ts.heureDebut', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return array_filter($timeSlots, function (TimeSlot $slot) {
+            return $this->isAvailable($slot);
+        });
     }
 
-    public function findAvailableSlotsForService(int $serviceId, array $reservedSlotIds): array
+    public function isAvailable(TimeSlot $timeSlot): bool
     {
-        $qb = $this->createQueryBuilder('t')
-            ->andWhere('t.service = :serviceId')
-            ->setParameter('serviceId', $serviceId);
-    
-        if (!empty($reservedSlotIds)) {
-            $qb->andWhere('t.id NOT IN (:reservedIds)')
-               ->setParameter('reservedIds', $reservedSlotIds);
-        }
-    
-        return $qb->getQuery()->getResult();
+        return !$this->reservationRepository->hasActiveReservationForTimeSlot($timeSlot);
     }
+
+
     //    /**
     //     * @return TimeSlot[] Returns an array of TimeSlot objects
     //     */

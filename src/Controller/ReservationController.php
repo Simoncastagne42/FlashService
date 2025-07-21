@@ -15,34 +15,50 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+
 
 final class ReservationController extends AbstractController
 {
     #[Route('/services/{id}/reserver', name: 'service_reserver')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function reserver(
         Request $request,
         Service $service,
         EntityManagerInterface $em,
         Security $security,
-        ReservationRepository $reservationRepo,
-        TimeSlotRepository $timeSlotRepo,
+        TimeSlotRepository $timeSlotRepository,
         MailService $mailService
     ): Response {
+
         /** @var User|null $user */
         $user = $security->getUser();
 
-        if (!$user) {
-            $this->addFlash('error', 'Vous devez être connecté pour réserver.');
-            return $this->redirectToRoute('app_login');
+        // Si ce n’est pas un client
+        if (!in_array('ROLE_CLIENT', $user->getRoles())) {
+            $this->addFlash('error', 'Vous devez avoir un compte de type "Client" pour réserver.');
+            return $this->redirectToRoute('app_home');
         }
 
+        // Si le profil client n’est pas encore rempli
         if (!$user->getClient()) {
-            $this->addFlash('error', 'Vous devez compléter votre profil client.');
+            $this->addFlash('error', 'Merci de compléter votre profil pour effectuer une réservation.');
+
+            // On stocke l’URL de retour
+            $request->getSession()->set('redirect_after_profile', $request->getUri());
+
             return $this->redirectToRoute('app_profil_infos');
         }
 
-        if (!in_array('ROLE_CLIENT', $user->getRoles())) {
-            $this->addFlash('error', 'Seuls les clients peuvent réserver.');
+
+
+        // Récupérer les créneaux disponibles pour ce service
+
+        $availableSlots = $timeSlotRepository->findAvailableSlotsForService($service->getId());
+
+        if (empty($availableSlots)) {
+            $this->addFlash('warning', 'Aucun créneau disponible pour ce service actuellement.');
             return $this->redirectToRoute('app_home');
         }
 
@@ -50,22 +66,28 @@ final class ReservationController extends AbstractController
         $reservation->setService($service);
         $reservation->setClient($user->getClient());
 
-        $reservedSlotIds = $reservationRepo->findReservedSlotIdsForService($service->getId());
-        $availableSlots = $timeSlotRepo->findAvailableSlotsForService($service->getId(), $reservedSlotIds);
-
         $form = $this->createForm(ReservationType::class, $reservation, [
-            'available_slots' => $availableSlots, // liste filtrée des créneaux du service
+            'available_slots' => $availableSlots
         ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $selectedTimeSlot = $reservation->getTimeSlot();
+
+            if (!$timeSlotRepository->isAvailable($selectedTimeSlot)) {
+                $this->addFlash('error', 'Ce créneau est déjà réservé. Veuillez en choisir un autre.');
+                return $this->redirectToRoute('service_reserver', ['id' => $service->getId()]);
+            }
+
             $reservation->setStatut(Reservation::STATUS_PENDING);
             $em->persist($reservation);
             $em->flush();
 
-            // Mail au client
+            // Envoi des mails
             $mailService->sendReservationCreated(
+                $reservation->getService()->getName(),
                 $reservation->getClient()->getFullName(),
                 $reservation->getClient()->getUser()->getEmail(),
                 $service->getProfessional()->getCompagnyName(),
@@ -74,15 +96,15 @@ final class ReservationController extends AbstractController
                 $reservation->getHeureDebut()?->format('H:i')
             );
 
-            // Mail au professionnel pour confirmation
             $mailService->sendReservationToConfirmToProfessional(
+                $reservation->getService()->getName(),
                 $service->getProfessional()->getUser()->getEmail(),
                 $reservation->getClient()->getFullName(),
                 $reservation->getTimeSlot()->getDate(),
                 $reservation->getHeureDebut()?->format('H:i')
             );
 
-            $this->addFlash('success', 'Réservation envoyée !');
+            $this->addFlash('success', 'Réservation envoyée avec succès !');
             return $this->redirectToRoute('app_profil_reservations');
         }
 
@@ -92,6 +114,7 @@ final class ReservationController extends AbstractController
         ]);
     }
 
+
     #[Route('/reservation/{id}/modifier', name: 'reservation_modifier')]
     public function modifier(
         Request $request,
@@ -99,7 +122,6 @@ final class ReservationController extends AbstractController
         EntityManagerInterface $em,
         Security $security,
         TimeSlotRepository $timeSlotRepo,
-        ReservationRepository $reservationRepo,
         MailService $mailService
     ): Response {
         /** @var User|null $user */
@@ -114,15 +136,9 @@ final class ReservationController extends AbstractController
             return $this->redirectToRoute('app_profil_reservations');
         }
 
-        $reservedSlotIds = $reservationRepo->findReservedSlotIdsForService(
-            $reservation->getService()->getId(),
-            $reservation->getId()
-        );
-
         $form = $this->createForm(ReservationType::class, $reservation, [
             'available_slots' => $timeSlotRepo->findAvailableSlotsForService(
-                $reservation->getService()->getId(),
-                $reservedSlotIds
+                $reservation->getService()->getId()
             ),
         ]);
 
@@ -130,7 +146,9 @@ final class ReservationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
+
             $mailService->sendReservationUpdated(
+                $reservation->getService()->getName(),
                 $reservation->getClient()->getFullName(),
                 $reservation->getClient()->getUser()->getEmail(),
                 $reservation->getService()->getProfessional()->getCompagnyName(),
@@ -139,12 +157,12 @@ final class ReservationController extends AbstractController
                 $reservation->getTimeSlot()->getHeureDebut()->format('H:i')
             );
             $mailService->sendReservationUpdatedToProfessional(
+                $reservation->getService()->getName(),
                 $reservation->getService()->getProfessional()->getUser()->getEmail(),
                 $reservation->getClient()->getFullName(),
                 $reservation->getTimeSlot()->getDate(),
                 $reservation->getTimeSlot()->getHeureDebut()?->format('H:i')
             );
-
 
             $this->addFlash('success', 'Votre réservation a bien été modifiée.');
             return $this->redirectToRoute('app_profil_reservations');
@@ -176,11 +194,12 @@ final class ReservationController extends AbstractController
             return $this->redirectToRoute('app_profil_reservations');
         }
 
+        // Changer juste le statut, garder le timeSlot lié
         $reservation->setStatut(Reservation::STATUS_CANCELLED);
-        $em->flush();
 
-        // Mail au client
+        // Envoi des mails
         $mailService->sendReservationCancelledToClient(
+            $reservation->getService()->getName(),
             $reservation->getClient()->getFullName(),
             $reservation->getClient()->getUser()->getEmail(),
             $reservation->getService()->getName(),
@@ -190,13 +209,15 @@ final class ReservationController extends AbstractController
             $reservation->getHeureDebut()?->format('H:i')
         );
 
-        // Mail au professionnel
         $mailService->sendReservationCancelledToProfessional(
+            $reservation->getService()->getName(),
             $reservation->getService()->getProfessional()->getUser()->getEmail(),
             $reservation->getClient()->getFullName(),
             $reservation->getTimeSlot()->getDate(),
             $reservation->getHeureDebut()?->format('H:i')
         );
+
+        $em->flush();
 
         $this->addFlash('success', 'Réservation annulée avec succès.');
         return $this->redirectToRoute('app_profil_reservations');
